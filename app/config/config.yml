@@ -84,7 +84,8 @@ assetic:
     assets:
         bootstrap_css:
             inputs:
-                - bundles/backoffice/styles.less
+                - '@BackOfficeBundle/Resources/public/less/styles.less'
+                - %kernel.root_dir%/../vendor/onokumus/metismenu/dist/metisMenu.min.css
             filters:
                 - lessphp
                 - cssrewrite
