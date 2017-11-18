@@ -1,6 +1,6 @@
 <?php
     
-namespace AppBundle\Controller;
+namespace BackOfficeBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;  
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -10,12 +10,10 @@ class LoginController extends Controller
     /**
      * @Route("/login")
      */
-    public function numberAction()
+    public function loginAction()
     {
-        $number = mt_rand(0, 100);
 
-         return $this->render('login.html.twig', array(
-            'number' => $number,
-        ));
+
+         return $this->render('BackOfficeBundle:Pages:login.html.twig');
     }
 }

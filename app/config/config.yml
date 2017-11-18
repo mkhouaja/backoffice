@@ -92,6 +92,7 @@ assetic:
             output: css/bootstrap.css
         bootstrap_js:
             inputs:
+                - '@BackOfficeBundle/Resources/public/js/script.js'
                 - %kernel.root_dir%/../vendor/twbs/bootstrap/js/transition.js
                 - %kernel.root_dir%/../vendor/twbs/bootstrap/js/alert.js
                 - %kernel.root_dir%/../vendor/twbs/bootstrap/js/button.js
