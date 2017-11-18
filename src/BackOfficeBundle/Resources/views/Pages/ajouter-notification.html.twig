@@ -56,7 +56,7 @@
                         </li>
                         <li  class="selected">
                             <a href="/notifications"><i class="fa fa-table fa-fw"></i> Gérer les notifications push</a>
-                        </li>                                       
+                        </li>                                            
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -65,50 +65,29 @@
         </nav>
 
         <div id="page-wrapper">
-        <div class="row">
-            <a href="/notifications/ajouter">
-                    <button type="button" class="btn btn-info btn-block right">Ajouter une notification</button>
-            </a>
-            </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default margin">
                         <div class="panel-heading">
-                            Liste des commentaires
+                            Ajouter une nouvelle notification
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Fiche</th>
-                                            <th>Titre</th>
-                                            <th>Texte</th>
-                                            <th>Date d'ajout</th>
-                                            <th>Date d'envoi</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Le zink</td>
-                                            <td>Promotion</td>
-                                            <td>Pour chaque commande de 4 burgers  le cinquième est offert.Venez nombreux</td>
-                                            <td>18/11/2017</td>
-                                            <td>-</td>
-                                            <td><button type="button" class="btn btn-primary btn-sm">Envoyer</button></td>
-                                            <td><button type="button" class="btn btn-warning btn-sm">Modifier</button></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm">Supprimer</button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.table-responsive -->
+                       		<form role="form">
+                                <fieldset>
+								    <legend>Ajouter une notification:</legend>
+									<div class="form-group">
+									    <label>Titre</label>
+	                                    <input class="form-control">
+									</div>
+									<div class="form-group">
+										<label>Description</label>
+										<textarea class="form-control" rows="3"></textarea>
+									</div>
+                                    <button type="submit" class="btn btn-default btn-info">Enregitrer</button>
+                                    <button type="submit" class="btn btn-default btn-info">Enregitrer et envoyer</button>
+                                </fieldset>
+							</form>
                         </div>
                         <!-- /.panel-body -->
                     </div>

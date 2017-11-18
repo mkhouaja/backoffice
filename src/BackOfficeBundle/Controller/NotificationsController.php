@@ -10,8 +10,15 @@ class NotificationsController extends Controller
     /**
      * @Route("/notifications", name="notifications")
      */
-    public function fichesAction()
+    public function notificationsAction()
     {
         return $this->render('BackOfficeBundle:Pages:notifications.html.twig');
+    }
+    /**
+     * @Route("/notifications/ajouter")
+     */
+    public function ajouterNotificationsAction()
+    {
+        return $this->render('BackOfficeBundle:Pages:ajouter-notification.html.twig');
     }
 }
