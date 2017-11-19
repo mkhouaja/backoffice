@@ -14,4 +14,11 @@ class DefaultController extends Controller
     {
         return $this->render('BackOfficeBundle:Default:index.html.twig');
     }
+    /**
+     * @Route("/profil", name="profil")
+     */
+    public function profilAction()
+    {
+        return $this->render('BackOfficeBundle:Pages:profil.html.twig');
+    }
 }
