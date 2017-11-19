@@ -96,9 +96,23 @@
 								  </fieldset>
                                   <fieldset>
                                       <legend>Images:</legend>
+                                      <div class="images-fiche">
+                                          <div class="image-fiche">
+                                              <table>
+                                                <td><img src="{{ asset('bundles/backoffice/images/zink1.jpg') }}" alt="zink1" /></td>
+                                                <td><button type="button" class="btn btn-danger btn-sm">Supprimer la photo</button></td> 
+                                              </table>      
+                                          </div>
+                                          <div class="image-fiche">
+                                              <table>
+                                                <td><img src="{{ asset('bundles/backoffice/images/zink2.jpg') }}" alt="zink2" /></td>
+                                                <td><button type="button" class="btn btn-danger btn-sm">Supprimer la photo</button></td> 
+                                              </table>      
+                                          </div>
+                                      </div>
                                       <div class="entry">
                                           <div class="form-group">
-                                                <label>Image</label>
+                                                <label>Ajouter une autre image</label>
                                                 <input type="file" name="fields[]">
                                                  <span class="input-group-btn">
                                                       <button class="btn btn-success btn-add" type="button">
@@ -110,14 +124,14 @@
                                   </fieldset>
                                   <div class="form-group">
                                     <button type="submit" class="btn btn-warning btn-sm"">Enregistrer les modifications</button>
-                                    <button type="button" class="btn btn-danger btn-sm">Supprimer</button></td>
+                                    <button type="button" class="btn btn-danger btn-sm">Supprimer la fiche</button></td>
                             
                                   </div>
 							</form>
                         </div>
                         <!-- /.panel-body -->
                         <div class="panel-heading">
-                            Les commentaires concernant cet établissement
+                            <h4>Les commentaires concernant cet établissement</h4>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -148,7 +162,7 @@
                         </div>
                         <!-- /.panel-body -->
                          <div class="panel-heading">
-                            Les notes concernant cet établissement
+                            <h4>Les notes concernant cet établissement</h4>
                         </div>
                         <div class="panel-body">
                             <h3>Note totale : 4</h3>
