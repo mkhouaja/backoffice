@@ -1,0 +1,42 @@
+<?php
+namespace BackOfficeBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="administrateur")
+ */
+class Administrateur
+{
+
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $email;
+     /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $mot_de_passe;
+     /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $nom;
+     /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $prenom;
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $date_ajout;
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $date_modification;
+}

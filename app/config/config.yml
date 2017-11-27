@@ -111,4 +111,10 @@ assetic:
             inputs:
                 - %kernel.root_dir%/../vendor/jquery/jquery/jquery-1.12.0.js
             output: js/jquery.js
+doctrine:
+    dbal:
+        charset: utf8mb4
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
 

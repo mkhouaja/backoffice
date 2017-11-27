@@ -1,0 +1,37 @@
+<?php
+namespace BackOfficeBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="commentaire")
+ */
+class Commentaire
+{
+
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id_com;
+     /**
+     * @ORM\Column(type="string", length=150)
+     */
+    private $texte;
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $date_ajout;
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $date_modification;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $id_fiche;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $id_utilisateur;
+}
