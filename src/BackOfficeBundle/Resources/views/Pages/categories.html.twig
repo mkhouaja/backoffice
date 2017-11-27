@@ -38,7 +38,7 @@
 
         <div id="page-wrapper">
             <div class="row">
-            <a href="/categories/ajouter">
+            <a href="/categorie/ajout">
                 <button type="button" class="btn btn-info btn-block right">Ajouter une catégorie</button>
             </a>
             </div>
@@ -64,24 +64,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Restaurant</td>
-                                            <td>Manel</td>
-                                            <td>18/11/2017</td>
-											<td>19/11/2017</td>
-                                            <td><a href="/categories/modifier/1"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm">Supprimer</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Patisserie</td>
-                                            <td>Manel</td>
-                                            <td>18/11/2017</td>
-											<td>19/11/2017</td>
-                                            <td><a href="/categories/modifier/2"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm">Supprimer</button></td>
-                                        </tr>
+                                        {% for categorie in categories %}
+                                            <tr>
+                                                <td>{{ categorie.idcat }}</td>
+                                                <td>{{ categorie.nom }}</td>
+                                                <td>{{ categorie.dateajout|date('d/m/Y') }}</td>
+    											<td>{{ categorie.datemodification|date('d/m/Y') }}</td>
+                                                <td><a href="{{ path('modifier_categorie', { 'categorie': categorie.idcat }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
+                                                <td><a href="{{ path('supprimer_categorie', { 'categorie': categorie.idcat }) }}"><button type="button" class="btn btn-danger btn-sm">Supprimer</button></a></td>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>

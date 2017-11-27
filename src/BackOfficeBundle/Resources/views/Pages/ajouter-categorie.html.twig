@@ -44,15 +44,14 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                       		<form role="form">
-                                <fieldset>
-								    <legend>Ajouter une catégorie:</legend>
-									<div class="form-group">
-	                                    <input class="form-control">
-									</div>
-                                    <button type="submit" class="btn btn-default btn-info">Ajouter</button>
-                                </fieldset>
-							</form>
+ 
+								{{ form_start(form) }}
+                                    <fieldset>
+                                        <legend>Ajouter une catégorie:</legend>
+                                        {{ form_widget(form) }}
+                                            <input type="submit" class="btn btn-default btn-info" value="Ajouter" />
+                                    </fieldset>
+                                {{ form_end(form) }}                           
                         </div>
                         <!-- /.panel-body -->
                     </div>

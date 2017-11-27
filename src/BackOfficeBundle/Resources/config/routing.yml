@@ -1,0 +1,4 @@
+back_office_categorie:
+    resource: "@BackOfficeBundle/Resources/config/routing/categorie.yml"
+    prefix:   /categorie
+
