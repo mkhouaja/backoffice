@@ -1,6 +1,7 @@
 <?php
 namespace BackOfficeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="fiche")
@@ -31,14 +32,30 @@ class Fiche
      */
     private $date_modification;
      /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Administrateur", inversedBy="fiches")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id")
      */
     private $id;
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Categorie", inversedBy="fiches")
+     * @ORM\JoinColumn(name="id_cat", referencedColumnName="id_cat")
      */
+     
     private $id_cat;
+    /**
+    * @ORM\OneToOne(targetEntity="Adresse",cascade={"persist"})
+    * @ORM\JoinColumn(name="id_adresse", referencedColumnName="id_adresse")
+    */
+    protected $adresse;
+    /**
+     * @ORM\OneToMany(targetEntity="Image", mappedBy="id_fiche")
+     */
+    private $images;
 
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
     /**
      * Get idFiche
      *
@@ -168,6 +185,7 @@ class Fiche
     {
         return $this->id;
     }
+ 
 
     /**
      * Set idCat
@@ -191,5 +209,63 @@ class Fiche
     public function getIdCat()
     {
         return $this->id_cat;
+    }
+
+    /**
+     * Set adresse
+     *
+     * @param \BackOfficeBundle\Entity\Adresse $adresse
+     *
+     * @return Fiche
+     */
+    public function setAdresse(\BackOfficeBundle\Entity\Adresse $adresse = null)
+    {
+        $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    /**
+     * Get adresse
+     *
+     * @return \BackOfficeBundle\Entity\Adresse
+     */
+    public function getAdresse()
+    {
+        return $this->adresse;
+    }
+
+    /**
+     * Add image
+     *
+     * @param \BackOfficeBundle\Entity\Image $image
+     *
+     * @return Fiche
+     */
+    public function addImage(\BackOfficeBundle\Entity\Image $image)
+    {
+        $this->images[] = $image;
+
+        return $this;
+    }
+
+    /**
+     * Remove image
+     *
+     * @param \BackOfficeBundle\Entity\Image $image
+     */
+    public function removeImage(\BackOfficeBundle\Entity\Image $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * Get images
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
     }
 }

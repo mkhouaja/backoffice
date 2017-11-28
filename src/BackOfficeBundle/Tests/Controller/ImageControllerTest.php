@@ -4,7 +4,7 @@ namespace BackOfficeBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AdministrateurControllerTest extends WebTestCase
+class ImageControllerTest extends WebTestCase
 {
     /*
     public function testCompleteScenario()
@@ -13,13 +13,13 @@ class AdministrateurControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Create a new entry in the database
-        $crawler = $client->request('GET', '/administrateur/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode(), "Unexpected HTTP status code for GET /administrateur/");
+        $crawler = $client->request('GET', '/image/');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode(), "Unexpected HTTP status code for GET /image/");
         $crawler = $client->click($crawler->selectLink('Create a new entry')->link());
 
         // Fill in the form and submit it
         $form = $crawler->selectButton('Create')->form(array(
-            'backofficebundle_administrateur[field_name]'  => 'Test',
+            'backofficebundle_image[field_name]'  => 'Test',
             // ... other fields to fill
         ));
 
@@ -33,7 +33,7 @@ class AdministrateurControllerTest extends WebTestCase
         $crawler = $client->click($crawler->selectLink('Edit')->link());
 
         $form = $crawler->selectButton('Update')->form(array(
-            'backofficebundle_administrateur[field_name]'  => 'Foo',
+            'backofficebundle_image[field_name]'  => 'Foo',
             // ... other fields to fill
         ));
 

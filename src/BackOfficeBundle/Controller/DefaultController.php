@@ -18,12 +18,13 @@ class DefaultController extends Controller
         $user = $this->getDoctrine()->getRepository('BackOfficeBundle:Administrateur')->find("1");
         $em = $this->getDoctrine()->getManager();
         
-
-        $utilisateurs = $em->getRepository('BackOfficeBundle:Utilisateur')->findAll();      
+        $utilisateurs = $em->getRepository('BackOfficeBundle:Utilisateur')->findAll(); 
+        $fiches = $em->getRepository('BackOfficeBundle:Fiche')->findAll();      
         $this->get('session')->set('administrateur', $user->getPrenom());
         return $this->render('BackOfficeBundle:Default:index.html.twig', array(
             'administrateur' => $user->getPrenom(),
-            'nb_u'=> count($utilisateurs)));
+            'nb_u'=> count($utilisateurs),
+            'nb_f'=> count($fiches)));
     }
     /**
      * @Route("/profil/{administrateur}" ,name="profil")

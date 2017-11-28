@@ -35,7 +35,8 @@ class Image
      */
     private $date_modification;
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Fiche", inversedBy="images")
+     * @ORM\JoinColumn(name="id_fiche", referencedColumnName="id_fiche")
      */
     private $id_fiche;
 

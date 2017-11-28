@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Fiches list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id_fiche</th>
+                <th>Nom</th>
+                <th>Decription</th>
+                <th>Date_ajout</th>
+                <th>Date_modification</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for fiche in fiches %}
+            <tr>
+                <td><a href="{{ path('fiche_show', { 'id_fiche': fiche.id_fiche }) }}">{{ fiche.idfiche }}</a></td>
+                <td>{{ fiche.nom }}</td>
+                <td>{{ fiche.decription }}</td>
+                <td>{% if fiche.dateajout %}{{ fiche.dateajout|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if fiche.datemodification %}{{ fiche.datemodification|date('Y-m-d') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('fiche_show', { 'id_fiche': fiche.id_fiche }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('fiche_edit', { 'id_fiche': fiche.id_fiche }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('fiche_new') }}">Create a new fiche</a>
+        </li>
+    </ul>
+{% endblock %}

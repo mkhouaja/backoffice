@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Images list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id_image</th>
+                <th>Nom</th>
+                <th>Chemin</th>
+                <th>Taille</th>
+                <th>Date_ajout</th>
+                <th>Date_modification</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for image in images %}
+            <tr>
+                <td><a href="{{ path('image_show', { 'id_image': image.id_image }) }}">{{ image.idimage }}</a></td>
+                <td>{{ image.nom }}</td>
+                <td>{{ image.chemin }}</td>
+                <td>{{ image.taille }}</td>
+                <td>{% if image.dateajout %}{{ image.dateajout|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if image.datemodification %}{{ image.datemodification|date('Y-m-d') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('image_show', { 'id_image': image.id_image }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('image_edit', { 'id_image': image.id_image }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('image_new') }}">Create a new image</a>
+        </li>
+    </ul>
+{% endblock %}

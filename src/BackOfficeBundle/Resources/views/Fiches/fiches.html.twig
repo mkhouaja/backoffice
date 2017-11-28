@@ -63,22 +63,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {% for fiche in fiches %}
                                         <tr>
-                                            <td>1</td>
-                                            <td>Le zink</td>
-                                            <td>Il offre une cuisine américaine essentiellement et vous accompagnera pour un petit déjeuner, un brunch, un déjeuner ou un dîner. </td>
-                                            <td>Manel</td>
-                                            <td>18/11/2017</td>
-                                            <td><a href="/fiches/consulter/1"><button type="button" class="btn btn-primary btn-sm">Consulter</button></a></td>
+                                            <td>{{ fiche.id_fiche }}</td>
+                                            <td>{{ fiche.nom }}</td>
+                                            <td>{{ fiche.decription }}</td>
+                                            <td>{{ fiche.prenom }}</td>                            
+                                            <td>{{ fiche.date_ajout|date('d/m/Y') }}</td>
+                                            <td><a href="{{ path('modifier_fiche', { 'fiche': fiche.id_fiche }) }}"><button type="button" class="btn btn-primary btn-sm">Consulter</button></a></td>
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Plan B</td>
-                                            <td>La franchise Plan B est un réseau d'enseignes de restauration rapide </td>
-                                            <td>Manel</td>
-                                            <td>19/11/2017</td>
-                                            <td><a href="/fiches/consulter/2"><button type="button" class="btn btn-primary btn-sm">Consulter</button></a></td>
-                                        </tr>
+                                       {% endfor %}  
                                     </tbody>
                                 </table>
                             </div>

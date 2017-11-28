@@ -1,0 +1,24 @@
+fiche_index:
+    path:     /
+    defaults: { _controller: "BackOfficeBundle:Fiche:index" }
+    methods:  GET
+
+fiche_show:
+    path:     /{id_fiche}/show
+    defaults: { _controller: "BackOfficeBundle:Fiche:show" }
+    methods:  GET
+
+fiche_new:
+    path:     /new
+    defaults: { _controller: "BackOfficeBundle:Fiche:new" }
+    methods:  [GET, POST]
+
+fiche_edit:
+    path:     /{id_fiche}/edit
+    defaults: { _controller: "BackOfficeBundle:Fiche:edit" }
+    methods:  [GET, POST]
+
+fiche_delete:
+    path:     /{id_fiche}/delete
+    defaults: { _controller: "BackOfficeBundle:Fiche:delete" }
+    methods:  DELETE

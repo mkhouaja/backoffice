@@ -36,6 +36,16 @@ class Categorie
     {
         return $this->id_cat;
     }
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Fiche", mappedBy="id_cat")
+     */
+    private $fiches;
+
+    public function __construct()
+    {
+        $this->fiches = new ArrayCollection();
+    }
 
     /**
      * Set nom
@@ -107,5 +117,39 @@ class Categorie
     public function getDateModification()
     {
         return $this->date_modification;
+    }
+
+    /**
+     * Add fich
+     *
+     * @param \BackOfficeBundle\Entity\Fiche $fich
+     *
+     * @return Categorie
+     */
+    public function addFich(\BackOfficeBundle\Entity\Fiche $fich)
+    {
+        $this->fiches[] = $fich;
+
+        return $this;
+    }
+
+    /**
+     * Remove fich
+     *
+     * @param \BackOfficeBundle\Entity\Fiche $fich
+     */
+    public function removeFich(\BackOfficeBundle\Entity\Fiche $fich)
+    {
+        $this->fiches->removeElement($fich);
+    }
+
+    /**
+     * Get fiches
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFiches()
+    {
+        return $this->fiches;
     }
 }

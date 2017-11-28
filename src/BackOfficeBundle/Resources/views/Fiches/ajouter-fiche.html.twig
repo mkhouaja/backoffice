@@ -44,62 +44,23 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                       		<form role="form">
+                            {{ form_start(form) }}
                                 <fieldset>
 								    <legend>Informations générales:</legend>
                                     <div class="form-group">
-                                            <label>Catégorie</label>
-                                            <select class="form-control">
-                                                <option value="1">Restaurant</option>
-                                                <option value="2">Salon de thé</option>
-                                            </select>
+                                         <label>Catégorie</label>
+                                         <select class="form-control" name="categorie">
+                                             {% for categorie in categories %}
+                                                <option value="{{ categorie.idcat }}">{{ categorie.nom }}</option>
+                                             {% endfor %}
+                                          </select>
                                         </div>
-									<div class="form-group">
-									    <label>Nom de l'établissement</label>
-	                                    <input class="form-control">
-									</div>
-									<div class="form-group">
-										<label>Description</label>
-										<textarea class="form-control" rows="3"></textarea>
-									</div>
-								  </fieldset>
-								  <fieldset>
-								    <legend>Adresse:</legend>
-									<div class="form-group">
-									    <label>Numéro</label>
-	                                    <input class="form-control">
-									</div>
-									<div class="form-group">
-									    <label>Rue</label>
-	                                    <input class="form-control">
-									</div>
-                                    <div class="form-group">
-									    <label>Code Postal</label>
-	                                    <input class="form-control">
-									</div>
-                                    <div class="form-group">
-									    <label>Ville</label>
-	                                    <input class="form-control">
-									</div>
-                                    <div class="form-group">
-									    <label>Pays</label>
-	                                    <input class="form-control">
-									</div>
-                                    <div class="form-group">
-									    <label>Longitude</label>
-	                                    <input class="form-control">
-									</div>
-                                    <div class="form-group">
-									    <label>Latitude</label>
-	                                    <input class="form-control">
-									</div>
-								  </fieldset>
-                                  <fieldset>
-                                      <legend>Images:</legend>
+                                    {{ form_widget(form) }}
+                                    <legend>Images:</legend>
                                       <div class="entry">
                                           <div class="form-group">
                                                 <label>Image</label>
-                                                <input type="file" name="fields[]">
+                                                <input type="file" name="image">
                                                  <span class="input-group-btn">
                                                       <button class="btn btn-success btn-add" type="button">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
@@ -107,12 +68,9 @@
                                                  </span>
                                            </div>
                                         </div>
-                                  </fieldset>
-                                  <div class="form-group">
-                                    <button type="submit" class="btn btn-default btn-info">Ajouter</button>
-                                  </div>
-							</form>
-                        </div>
+                                        </fieldset>
+                                    <input type="submit" class="btn btn-default btn-info" value="Ajouter" />
+                                    {{ form_end(form) }}
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->

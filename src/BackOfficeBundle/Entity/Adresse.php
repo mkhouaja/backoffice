@@ -42,10 +42,6 @@ class Adresse
      * @ORM\Column(type="string", length=150)
      */
     private $latitude;
-     /**
-     * @ORM\Column(type="integer")
-     */
-     private $id_fiche;
 
     /**
      * Get idAdresse
