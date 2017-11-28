@@ -5,18 +5,7 @@
 </head>
 <div id="wrapper">
 
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">Bonjour manel.khouaja@gmail.com</a>
-            </div>
-            <!-- /.navbar-header -->
+            {% include 'BackOfficeBundle:Pages:bonjour.html.twig' %}    
 
             {% include 'BackOfficeBundle:Pages:navigation.html.twig' %} 
 
@@ -65,7 +54,7 @@
                                     <i class="fa fa-user-o fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">2</div>
+                                    <div class="huge">{{nb_u}}</div>
                                     <div>Utilisateurs</div>
                                 </div>
                             </div>

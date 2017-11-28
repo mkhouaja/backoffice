@@ -9,16 +9,16 @@
             <h3 class="panel-title">Authentification</h3>
         </div>
         <div class="panel-body">
-        <form>
+      <form action="{{ path('login') }}" method="post" name="form-login">
           <div class="form-group">
             <label for="Email">Email</label>
-            <input class="form-control" id="Email" type="email" aria-describedby="emailHelp" placeholder="Entrez votre email">
+            <input class="form-control" id="Email" name="email" type="email" aria-describedby="emailHelp" placeholder="Entrez votre email">
           </div>
           <div class="form-group">
             <label for="Password">Mot de passe</label>
-            <input class="form-control" id="Password" type="password" placeholder="Entrez votre mot de passe">
+            <input class="form-control" id="Password" name="password" type="password" placeholder="Entrez votre mot de passe">
           </div>
-          <a class="btn btn-primary btn-block" href="index">S'authentifier</a>
+          <input class="btn btn-primary btn-block" type="submit" value="S'authentifier"/>
         </form>
         <div class="text-center">
           <a class="d-block small" href="forgot-password.html">Mot de passe oublié?</a>

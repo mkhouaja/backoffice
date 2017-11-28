@@ -11,19 +11,23 @@ use Symfony\Component\HttpFoundation\Request;
  * Categorie controller.
  *
  */
+
+
 class CategorieController extends Controller
 {
+   
     /**
      * @Route("/categories", name="categories")
     */
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-
+        $user = $this->getDoctrine()->getRepository('BackOfficeBundle:Administrateur')->find("1");  
         $categories = $em->getRepository('BackOfficeBundle:Categorie')->findAll();
 
         return $this->render('BackOfficeBundle:Categories:categories.html.twig', array(
             'categories' => $categories,
+            'administrateur' => $user->getPrenom(),
         ));
     }
     /**
