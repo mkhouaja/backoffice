@@ -51,10 +51,15 @@ class Fiche
      * @ORM\OneToMany(targetEntity="Image", mappedBy="id_fiche")
      */
     private $images;
+    /**
+     * @ORM\OneToMany(targetEntity="Commentaire", mappedBy="id_fiche")
+     */
+    private $commentaires;
 
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
     }
     /**
      * Get idFiche
@@ -267,5 +272,39 @@ class Fiche
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * Add commentaire
+     *
+     * @param \BackOfficeBundle\Entity\Commentaire $commentaire
+     *
+     * @return Fiche
+     */
+    public function addCommentaire(\BackOfficeBundle\Entity\Commentaire $commentaire)
+    {
+        $this->commentaires[] = $commentaire;
+
+        return $this;
+    }
+
+    /**
+     * Remove commentaire
+     *
+     * @param \BackOfficeBundle\Entity\Commentaire $commentaire
+     */
+    public function removeCommentaire(\BackOfficeBundle\Entity\Commentaire $commentaire)
+    {
+        $this->commentaires->removeElement($commentaire);
+    }
+
+    /**
+     * Get commentaires
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCommentaires()
+    {
+        return $this->commentaires;
     }
 }

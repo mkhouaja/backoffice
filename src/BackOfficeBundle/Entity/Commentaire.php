@@ -27,11 +27,13 @@ class Commentaire
      */
     private $date_modification;
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Fiche", inversedBy="commentaires")
+     * @ORM\JoinColumn(name="id_fiche", referencedColumnName="id_fiche")
      */
     private $id_fiche;
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Utilisateur", inversedBy="commentaires")
+     * @ORM\JoinColumn(name="id_utilisateur", referencedColumnName="id_utilisateur")
      */
     private $id_utilisateur;
 

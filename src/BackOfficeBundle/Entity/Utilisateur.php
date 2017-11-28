@@ -34,6 +34,15 @@ class Utilisateur
      * @ORM\Column(type="date")
      */
     private $date_modification;
+    /**
+     * @ORM\OneToMany(targetEntity="Commentaire", mappedBy="id_utilisateur")
+     */
+    private $commentaires;
+
+    public function __construct()
+    {
+        $this->commentaires = new ArrayCollection();
+    }
 
     /**
      * Get idUtilisateur
@@ -163,5 +172,39 @@ class Utilisateur
     public function getDateModification()
     {
         return $this->date_modification;
+    }
+
+    /**
+     * Add commentaire
+     *
+     * @param \BackOfficeBundle\Entity\Commentaire $commentaire
+     *
+     * @return Utilisateur
+     */
+    public function addCommentaire(\BackOfficeBundle\Entity\Commentaire $commentaire)
+    {
+        $this->commentaires[] = $commentaire;
+
+        return $this;
+    }
+
+    /**
+     * Remove commentaire
+     *
+     * @param \BackOfficeBundle\Entity\Commentaire $commentaire
+     */
+    public function removeCommentaire(\BackOfficeBundle\Entity\Commentaire $commentaire)
+    {
+        $this->commentaires->removeElement($commentaire);
+    }
+
+    /**
+     * Get commentaires
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCommentaires()
+    {
+        return $this->commentaires;
     }
 }

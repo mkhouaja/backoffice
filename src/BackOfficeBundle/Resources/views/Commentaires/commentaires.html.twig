@@ -58,25 +58,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Le zink</td>
-                                            <td>manel.khouaja@gmail.com</td>
-                                            <td>Trés bon </td>
-                                            <td>18/11/2017</td>
-                                            <td><button type="button" class="btn btn-warning btn-sm">Modifier</button></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm">Supprimer</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Plan B</td>
-                                            <td>manel.khouaja@gmail.com</td>
-                                            <td> Excellent , propre et sandwichs trés délicieux bons</td>
-                                            <td>19/11/2017</td>
-                                            <td><button type="button" class="btn btn-warning btn-sm">Modifier</button></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm confirmModalLink">Supprimer</button></td>
-                                        </tr>
-                                    </tbody>
+                                        {% for commentaire in commentaires %}
+                                            <tr>
+                                                <td>{{ commentaire.id_com }}</td>
+                                                <td>{{ commentaire.nom }}</td>
+                                                <td>{{ commentaire.email }}</td>
+                                                <td>{{ commentaire.texte }}</td>
+                                                <td>{{ commentaire.date_ajout|date('d/m/Y') }}</td>
+    	                                        <td><a href="{{ path('modifier_commentaire', { 'commentaire': commentaire.id_com }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
+                                                <td><a href="{{ path('supprimer_commentaire', { 'commentaire': commentaire.id_com }) }}"><button type="button" class="btn btn-danger btn-sm">Supprimer</button></a></td>
+                                            </tr>
+                                        {% endfor %}
+                                   </tbody>
                                 </table>
                             </div>
                             <!-- /.table-responsive -->
