@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Administrateurs list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Mot_de_passe</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Date_ajout</th>
+                <th>Date_modification</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for administrateur in administrateurs %}
+            <tr>
+                <td><a href="{{ path('administrateur_show', { 'id': administrateur.id }) }}">{{ administrateur.id }}</a></td>
+                <td>{{ administrateur.email }}</td>
+                <td>{{ administrateur.motdepasse }}</td>
+                <td>{{ administrateur.nom }}</td>
+                <td>{{ administrateur.prenom }}</td>
+                <td>{% if administrateur.dateajout %}{{ administrateur.dateajout|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if administrateur.datemodification %}{{ administrateur.datemodification|date('Y-m-d') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('administrateur_show', { 'id': administrateur.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('administrateur_edit', { 'id': administrateur.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('administrateur_new') }}">Create a new administrateur</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,24 @@
+administrateur_index:
+    path:     /
+    defaults: { _controller: "BackOfficeBundle:Administrateur:index" }
+    methods:  GET
+
+administrateur_show:
+    path:     /{id}/show
+    defaults: { _controller: "BackOfficeBundle:Administrateur:show" }
+    methods:  GET
+
+administrateur_new:
+    path:     /new
+    defaults: { _controller: "BackOfficeBundle:Administrateur:new" }
+    methods:  [GET, POST]
+
+administrateur_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "BackOfficeBundle:Administrateur:edit" }
+    methods:  [GET, POST]
+
+administrateur_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "BackOfficeBundle:Administrateur:delete" }
+    methods:  DELETE

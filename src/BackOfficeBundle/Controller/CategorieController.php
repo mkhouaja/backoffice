@@ -22,7 +22,7 @@ class CategorieController extends Controller
 
         $categories = $em->getRepository('BackOfficeBundle:Categorie')->findAll();
 
-        return $this->render('BackOfficeBundle:Pages:categories.html.twig', array(
+        return $this->render('BackOfficeBundle:Categories:categories.html.twig', array(
             'categories' => $categories,
         ));
     }
@@ -51,7 +51,7 @@ class CategorieController extends Controller
             return $this->redirectToRoute('categories');
         }
 
-        return $this->render('BackOfficeBundle:Pages:ajouter-categorie.html.twig', array(
+        return $this->render('BackOfficeBundle:Categories:ajouter-categorie.html.twig', array(
             'categorie' => $categorie,
             'form' => $form->createView(),
         ));
@@ -76,7 +76,7 @@ class CategorieController extends Controller
             return $this->redirectToRoute('categories');
         }
 
-        return $this->render('BackOfficeBundle:Pages:modifier-categorie.html.twig', array(
+        return $this->render('BackOfficeBundle:Categories:modifier-categorie.html.twig', array(
             'categorie' => $categorie,
             'edit_form' => $editForm->createView()
         ));

@@ -6,3 +6,7 @@ back_office:
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+    
+back_office_administrateur:
+    resource: "@BackOfficeBundle/Resources/config/routing/administrateur.yml"
+    prefix:   /administrateur
