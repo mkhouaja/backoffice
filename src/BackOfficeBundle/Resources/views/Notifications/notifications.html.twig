@@ -65,18 +65,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    {% for notification in notifications %}
                                         <tr>
-                                            <td>1</td>
-                                            <td>Le zink</td>
-                                            <td>Promotion</td>
-                                            <td>Pour chaque commande de 4 burgers  le cinquième est offert.Venez nombreux</td>
-                                            <td>18/11/2017</td>
-                                            <td>-</td>
-                                            <td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#success">Envoyer</button></td>
-                                            <td><button type="button" class="btn btn-warning btn-sm">Modifier</button></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm">Supprimer</button></td>
+                                            <td>{{ notification.id_notif }}</td>
+                                            <td>{{ notification.nom }}</td>
+                                            <td>{{ notification.titre }}</td>
+                                            <td>{{ notification.texte }}</td>
+                                            <td>{{ notification.date_ajout|date('d/m/Y') }}</td>
+                                            <td>{% if notification.date_envoi %}{{ notification.date_envoi|date('d/m/Y') }}{% endif %}</td>
+	                                        <td><a href="{{ path('envoyer_notification', { 'notification': notification.id_notif }) }}"><button type="button"  class="btn btn-primary btn-sm">Envoyer</button></a></td>
+                                            <td><a href="{{ path('modifier_notification', { 'notification':  notification.id_notif }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
+                                            <td><a href="{{ path('supprimer_notification', { 'notification':  notification.id_notif }) }}"><button type="button" class="btn btn-danger btn-sm">Supprimer</button></a></td>
                                         </tr>
-                                    </tbody>
+                                        {% endfor %}
+                                   </tbody>
                                 </table>
                             </div>
                             <!-- /.table-responsive -->

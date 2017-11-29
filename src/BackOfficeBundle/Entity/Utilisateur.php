@@ -38,6 +38,7 @@ class Utilisateur
      * @ORM\OneToMany(targetEntity="Commentaire", mappedBy="id_utilisateur")
      */
     private $commentaires;
+    
 
     public function __construct()
     {

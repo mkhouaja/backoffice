@@ -20,13 +20,16 @@ class DefaultController extends Controller
         
         $utilisateurs = $em->getRepository('BackOfficeBundle:Utilisateur')->findAll(); 
         $fiches = $em->getRepository('BackOfficeBundle:Fiche')->findAll();
-        $commentaires = $em->getRepository('BackOfficeBundle:Commentaire')->findAll();      
+        $commentaires = $em->getRepository('BackOfficeBundle:Commentaire')->findAll();  
+        $notifications = $em->getRepository('BackOfficeBundle:Notification')->findAll();   
+           
         $this->get('session')->set('administrateur', $user->getPrenom());
         return $this->render('BackOfficeBundle:Default:index.html.twig', array(
             'administrateur' => $user->getPrenom(),
             'nb_u'=> count($utilisateurs),
             'nb_f'=> count($fiches),
-            'nb_c'=> count($commentaires)));
+            'nb_c'=> count($commentaires),
+            'nb_n'=> count($notifications)));
     }
     /**
      * @Route("/profil/{administrateur}" ,name="profil")

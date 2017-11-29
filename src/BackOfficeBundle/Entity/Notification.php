@@ -16,11 +16,11 @@ class Notification
      */
     private $id_notif;
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=150)
      */
     private $titre;
 	/**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=150)
      */
     private $texte;
     /**
@@ -32,13 +32,19 @@ class Notification
      */
     private $date_modification;
 	/**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $date_envoi;
-	/**
-     * @ORM\Column(type="integer")
+	 /**
+     * @ORM\ManyToOne(targetEntity="Administrateur", inversedBy="notifications")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id")
      */
     private $id;
+    /**
+     * @ORM\ManyToOne(targetEntity="Fiche", inversedBy="notifications")
+     * @ORM\JoinColumn(name="id_fiche", referencedColumnName="id_fiche")
+     */
+    private $id_fiche;
 
     /**
      * Get idNotif
@@ -192,5 +198,29 @@ class Notification
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set idFiche
+     *
+     * @param \BackOfficeBundle\Entity\Fiche $idFiche
+     *
+     * @return Notification
+     */
+    public function setIdFiche(\BackOfficeBundle\Entity\Fiche $idFiche = null)
+    {
+        $this->id_fiche = $idFiche;
+
+        return $this;
+    }
+
+    /**
+     * Get idFiche
+     *
+     * @return \BackOfficeBundle\Entity\Fiche
+     */
+    public function getIdFiche()
+    {
+        return $this->id_fiche;
     }
 }

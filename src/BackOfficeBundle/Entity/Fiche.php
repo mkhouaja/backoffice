@@ -55,11 +55,16 @@ class Fiche
      * @ORM\OneToMany(targetEntity="Commentaire", mappedBy="id_fiche")
      */
     private $commentaires;
-
+     /**
+     * @ORM\OneToMany(targetEntity="Notification", mappedBy="id_fiche")
+     */
+    private $notifications
+    ;
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
     /**
      * Get idFiche
@@ -306,5 +311,39 @@ class Fiche
     public function getCommentaires()
     {
         return $this->commentaires;
+    }
+
+    /**
+     * Add notification
+     *
+     * @param \BackOfficeBundle\Entity\Notification $notification
+     *
+     * @return Fiche
+     */
+    public function addNotification(\BackOfficeBundle\Entity\Notification $notification)
+    {
+        $this->notifications[] = $notification;
+
+        return $this;
+    }
+
+    /**
+     * Remove notification
+     *
+     * @param \BackOfficeBundle\Entity\Notification $notification
+     */
+    public function removeNotification(\BackOfficeBundle\Entity\Notification $notification)
+    {
+        $this->notifications->removeElement($notification);
+    }
+
+    /**
+     * Get notifications
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNotifications()
+    {
+        return $this->notifications;
     }
 }
