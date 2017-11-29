@@ -47,7 +47,9 @@ class Fiche
     * @ORM\JoinColumn(name="id_adresse", referencedColumnName="id_adresse")
     */
     protected $adresse;
+    
     /**
+
      * @ORM\OneToMany(targetEntity="Image", mappedBy="id_fiche")
      */
     private $images;

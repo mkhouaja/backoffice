@@ -55,8 +55,8 @@ class FicheController extends Controller
             $id_cat = $request->request->get('categorie');
             $categorie = $this->getDoctrine()->getRepository('BackOfficeBundle:Categorie')->find($id_cat);
             $fiche->setIdCat($categorie);  
-            //var_dump ($categorie);   
-            var_dump($request->request->get('image'));
+            $file = $fiche->getImages();
+
             $em->persist($fiche);
             $em->flush();
 
