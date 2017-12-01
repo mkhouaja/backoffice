@@ -6,7 +6,8 @@ use BackOfficeBundle\Entity\Categorie;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Categorie controller.
  *
@@ -72,7 +73,7 @@ class CategorieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-             $date = date('Y-m-d');
+            $date = date('Y-m-d');
             $date = new \DateTime($date); 
             $categorie->setDateModification($date);
             $this->getDoctrine()->getManager()->flush();
@@ -98,5 +99,26 @@ class CategorieController extends Controller
             }
 
         return $this->redirectToRoute('categories');
+    }
+    /*********** Liste des fonctions appelées par l'application*************/
+    /**
+     * @Route("/api/categories-list", name="categories_list")
+     * @Method({"GET"})
+    */
+    public function getCategories()
+    {
+       $em = $this->getDoctrine()->getManager();
+       $categories = $em->getRepository('BackOfficeBundle:Categorie')->findAll();
+        /* @var $categories Categorie[] */
+
+        $formatted = [];
+        foreach ($categories as $categorie) {
+            $formatted[] = [
+               'id' => $categorie->getIdCat(),
+               'nom' => $categorie->getNom(),
+            ];
+        }
+
+        return new JsonResponse($formatted);
     }
 }

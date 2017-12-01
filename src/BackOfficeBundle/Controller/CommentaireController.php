@@ -5,7 +5,9 @@ namespace BackOfficeBundle\Controller;
 use BackOfficeBundle\Entity\Commentaire;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * Commentaire controller.
@@ -94,5 +96,36 @@ class CommentaireController extends Controller
         }
 
         return $this->redirectToRoute('commentaires');
+    }
+    
+    /*********** Liste des fonctions appelées par l'application*************/
+    
+    /**
+     * @Route("/api/commentaires/{fiche}", name="commentaires_fiche")
+     * @Method({"GET"})
+     */
+    public function getCommentaires(Int $fiche)
+    {
+      $em = $this->getDoctrine()->getManager();
+       $repository = $em->getRepository('BackOfficeBundle:Commentaire');
+        $query = $repository->createQueryBuilder('u')
+        ->select('u.texte,u.date_ajout')         
+                ->where ('u.id_fiche = :idFiche')
+                ->setParameters(['idFiche'=> $fiche])
+                ->getQuery()->getResult();
+        $commentaires = $query;
+        /* @var $fiches Fiche[] */
+
+        $formatted = [];
+        foreach ($commentaires as $commentaire) {
+            
+            $date = $commentaire['date_ajout']->format('d/m/Y');
+            $formatted[] = [
+               'date'           => $date,
+               'commentaire'    => $commentaire['texte']
+            ];
+        }
+
+        return new JsonResponse($formatted);
     }
 }

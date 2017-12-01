@@ -6,7 +6,9 @@ use BackOfficeBundle\Entity\Fiche;
 use BackOfficeBundle\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 
 /**
@@ -256,5 +258,93 @@ class FicheController extends Controller
             ->getQuery();
         $somme = $query->getSingleScalarResult();      
         return $somme;
+    }
+    
+    /*********** Liste des fonctions appelées par l'application*************/
+    /**
+     * @Route("/api/fiches-list/{categorie}", name="fiches_list")
+     * @Method({"GET"})
+     */
+    public function getFiches(Int $categorie)
+    {
+       $em = $this->getDoctrine()->getManager();
+       $repository = $em->getRepository('BackOfficeBundle:Fiche');
+        $query = $repository->createQueryBuilder('u')
+        ->select('g.nom nom_image,u.id_fiche,u.nom,u.decription') 
+                ->innerjoin('BackOfficeBundle:Image', 'g' ,'WITH', 'u.id_fiche = g.id_fiche')            
+                ->where ('u.id_cat = :idCat')
+                ->setParameters(['idCat'=> $categorie])
+                ->getQuery()->getResult();
+        $fiches = $query;
+        /* @var $fiches Fiche[] */
+
+        $formatted = [];
+        foreach ($fiches as $fiche) {
+            $formatted[] = [
+               'id'             => $fiche['id_fiche'],
+               'nom'            => $fiche['nom'],
+               'description'    => $fiche['decription'],
+               'url_image'      => 'http://127.0.0.1:8000/uploads/images/'.$fiche['nom_image']
+            ];
+        }
+
+        return new JsonResponse($formatted);
+    }
+    /**
+     * @Route("/api/fiche/{fiche}", name="fiche_details")
+     * @Method({"GET"})
+     */
+    public function getFiche(Int $fiche)
+    {
+       $em = $this->getDoctrine()->getManager();
+       $repository = $em->getRepository('BackOfficeBundle:Fiche');
+       
+       // Calculer note finale de la fiche
+       $repository2 = $em->getRepository('BackOfficeBundle:Note');
+        $query2 = $repository2->createQueryBuilder('g')
+            ->select("avg(g.note) as note")
+            ->where ('g.id_fiche = :idFiche')
+            ->setParameters(['idFiche'=> $fiche])
+            ->getQuery();
+        $somme = $query2->getSingleScalarResult(); 
+
+        
+       // Récupérer l'adresse
+       $repository3 = $em->getRepository('BackOfficeBundle:Adresse');
+       $query3 = $repository3->createQueryBuilder('u')
+        ->select('u.numero,u.rue,u.code_postal,u.ville,u.pays') 
+                ->innerjoin('BackOfficeBundle:Fiche', 'g' ,'WITH', 'g.adresse = u.id_adresse')   
+                ->where ('g.id_fiche = :idFiche')
+                ->setParameters(['idFiche'=> $fiche])           
+                ->getQuery()->getResult();
+        $adresse = $query3;
+  
+       // Récupérer Fiche    
+        $query = $repository->createQueryBuilder('u')
+        ->select('g.nom nom_image,u.id_fiche,u.nom,u.decription') 
+                ->innerjoin('BackOfficeBundle:Image', 'g' ,'WITH', 'u.id_fiche = g.id_fiche')            
+                ->where ('u.id_fiche = :idFiche')
+                ->setParameters(['idFiche'=> $fiche])
+                ->getQuery()->getResult();
+        $fiche = $query;
+        /* @var $fiches Fiche[] */
+            $adresse = $adresse[0]['numero'].' '.$adresse[0]['rue'].' '.$adresse[0]['code_postal'].' '.$adresse[0]['ville'].' '.$adresse[0]['pays'];
+            $formatted = [];
+            if ((int)$somme > 0) 
+               $somme = (int)$somme;
+            else 
+                $somme = "-";
+           
+            $formatted[] = [
+               'id'             => $fiche[0]['id_fiche'],
+               'nom'            => $fiche[0]['nom'],
+               'description'    => $fiche[0]['decription'],
+               'url_image'      => 'http://127.0.0.1:8000/uploads/images/'.$fiche[0]['nom_image'],
+               'note_finale'    => $somme,
+               'adresse'        => $adresse
+            ];
+
+
+        return new JsonResponse($formatted);
     }
 }
