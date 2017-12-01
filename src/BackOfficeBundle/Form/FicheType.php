@@ -18,7 +18,7 @@ class FicheType extends AbstractType
         $builder->add('nom')
                 ->add('decription')
                 ->add('adresse', AdresseType::class)
-                ->add('images', FileType::class, array(
+                ->add('image', FileType::class, array(
                         'multiple' => true,
                         'label' => 'Image',
                        ));

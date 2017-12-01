@@ -68,6 +68,9 @@ class CommentaireController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $date = date('Y-m-d');
+            $date = new \DateTime($date); 
+            $commentaire>setDateModification($date);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('commentaires');

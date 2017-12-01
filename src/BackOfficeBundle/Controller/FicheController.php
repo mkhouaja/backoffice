@@ -3,9 +3,11 @@
 namespace BackOfficeBundle\Controller;
 
 use BackOfficeBundle\Entity\Fiche;
+use BackOfficeBundle\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+
 
 /**
  * Fiche controller.
@@ -37,6 +39,7 @@ class FicheController extends Controller
     public function newAction(Request $request)
     {
         $fiche = new Fiche();
+        $img = new Image();
         $form = $this->createForm('BackOfficeBundle\Form\FicheType', $fiche);
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
@@ -49,18 +52,35 @@ class FicheController extends Controller
             $date = new \DateTime($date);
             $fiche->setDateAjout($date);
             $fiche->setDateModification($date);
-            $fiche->setDateModification($date);
             $fiche->setId($user);
             //Enregistrer Categorie
             $id_cat = $request->request->get('categorie');
             $categorie = $this->getDoctrine()->getRepository('BackOfficeBundle:Categorie')->find($id_cat);
-            $fiche->setIdCat($categorie);  
-            $file = $fiche->getImages();
-
+            $fiche->setIdCat($categorie);         
             $em->persist($fiche);
             $em->flush();
+            
+            //Upload des images          
+             $images = $fiche->getImages();
+             foreach ($images as $image) {
+                 
+                 $imageName = $image->getClientOriginalName();
+                 $image->move(
+                     $this->getParameter('images_directory'),
+                     $imageName
+                 );
+                 $img->setChemin( $this->getParameter('images_directory').'/'.$image->getClientOriginalName());
+                 $img->setTaille($image->getClientSize());
+                 $img->setNom($image->getClientOriginalName());
+                 $img->setDateAjout($date);
+                 $img->setDateModification($date);
+                 $img->setIdFiche($fiche);
+                
+                 $em->persist($img);
+            }
+            $em->flush();
 
-            return $this->redirectToRoute('fiche_show', array('id_fiche' => $fiche->getId_fiche()));
+            return $this->redirectToRoute('fiches');
         }
 
         return $this->render('BackOfficeBundle:Fiches:ajouter-fiche.html.twig', array(
@@ -77,39 +97,133 @@ class FicheController extends Controller
     */
     public function editAction(Request $request, Fiche $fiche)
     {
-        $deleteForm = $this->createDeleteForm($fiche);
+        $img = new Image();
         $editForm = $this->createForm('BackOfficeBundle\Form\FicheType', $fiche);
         $editForm->handleRequest($request);
-
+        $em = $this->getDoctrine()->getManager();
+        $categories = $em->getRepository('BackOfficeBundle:Categorie')->findAll();
+        //Récupérer les commentaires reliés a la fiche
+        $repository = $em->getRepository('BackOfficeBundle:Commentaire');
+        $query = $repository->createQueryBuilder('u')
+        ->select('g.email,u.texte,u.id_com,u.date_ajout')
+                ->innerjoin('BackOfficeBundle:Utilisateur', 'g' ,'WITH', 'u.id_utilisateur = g.id_utilisateur')
+                ->where ('u.id_fiche = :idFiche')
+                ->setParameters(['idFiche'=> $fiche->getIdFiche()])
+                ->getQuery()->getResult();
+                
+        // Récupérer les notes de la fiche 
+         $repository2 = $em->getRepository('BackOfficeBundle:Note');
+         $query2 = $repository2->createQueryBuilder('u')
+        ->select('g.email,u.note,u.id_note,u.date_ajout')
+                ->innerjoin('BackOfficeBundle:Utilisateur', 'g' ,'WITH', 'u.id_utilisateur = g.id_utilisateur')
+                ->where ('u.id_fiche = :idFiche')
+                ->setParameters(['idFiche'=> $fiche->getIdFiche()])
+                ->getQuery()->getResult();
+       
+        // Récupérer les images de la fiche
+        $repository3 = $em->getRepository('BackOfficeBundle:Image');
+        $query3 = $repository3->createQueryBuilder('u')
+        ->select('u.id_image,u.nom')
+                ->where ('u.id_fiche = :idFiche')
+                ->setParameters(['idFiche'=> $fiche->getIdFiche()])
+                ->getQuery()->getResult();
+        
+   
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $date = date('Y-m-d');
+            $date = new \DateTime($date); 
+            $fiche->setDateModification($date);
+             //EnregistrerCategorie
+            $id_cat = $request->request->get('categorie');
+            $cat = $this->getDoctrine()->getRepository('BackOfficeBundle:Categorie')->find($id_cat);
+            $fiche->setIdCat($cat);
             $this->getDoctrine()->getManager()->flush();
+            //Upload des images          
+             $images = $fiche->getImages();
+             foreach ($images as $image) {
+                 
+                 $imageName = $image->getClientOriginalName();
+                 $image->move(
+                     $this->getParameter('images_directory'),
+                     $imageName
+                 );
+                 $img->setChemin( $this->getParameter('images_directory').'/'.$image->getClientOriginalName());
+                 $img->setTaille($image->getClientSize());
+                 $img->setNom($image->getClientOriginalName());
+                 $img->setDateAjout($date);
+                 $img->setDateModification($date);
+                 $img->setIdFiche($fiche);
+                
+                 $em->persist($img);
+             }
+              $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('fiche_edit', array('id_fiche' => $fiche->getId_fiche()));
+            return $this->redirectToRoute('modifier_fiche', array('fiche' => $fiche->getIdFiche()));
         }
 
-        return $this->render('fiche/edit.html.twig', array(
+        return $this->render('BackOfficeBundle:Fiches:consulter-fiche.html.twig', array(
             'fiche' => $fiche,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'commentaires' => $query,
+            'notes'      => $query2,
+            'categories'  => $categories,
+            'images'      => $query3,
         ));
     }
 
-    /**
-     * Deletes a fiche entity.
-     *
-     */
+     /**
+    * @Route("/fiche/supprimer/{fiche}", name="supprimer_fiche")
+    */
     public function deleteAction(Request $request, Fiche $fiche)
     {
-        $form = $this->createDeleteForm($fiche);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($fiche) {
             $em = $this->getDoctrine()->getManager();
-            $em->remove($fiche);
-            $em->flush();
-        }
+            
+             //Supprimer les commentaires reliés a la fiche 
+            $query =  $em->createQuery(
+                        'DELETE 
+                            BackOfficeBundle:Commentaire u 
+                            WHERE 
+                            u.id_fiche = :idFiche'
+                         )
+                    ->setParameters(['idFiche'=> $fiche->getIdFiche()]);
+                    $query->execute();
+                    
+            // Supprimer les notes de la fiche 
+            $query2 =  $em->createQuery(
+                        'DELETE 
+                            BackOfficeBundle:Note u
+                            WHERE 
+                            u.id_fiche = :idFiche'
+                         )
+                    ->setParameters(['idFiche'=> $fiche->getIdFiche()]);
+                    $query2->execute();
+          
+            // Supprimer les images de la fiche
+            $query3 = $em->createQuery(
+                        'DELETE 
+                            BackOfficeBundle:Image u
+                            WHERE 
+                            u.id_fiche = :idFiche'
+                        )   
+                    ->setParameters(['idFiche'=> $fiche->getIdFiche()]);
+                    $query3->execute();
+            // Supprimer les notifications 
+             $query4 =  $em->createQuery(
+                        'DELETE 
+                            BackOfficeBundle:Notification u
+                            WHERE 
+                            u.id_fiche = :idFiche'
+                         )
+                    ->setParameters(['idFiche'=> $fiche->getIdFiche()]);
+                    $query4->execute();
+                $em->remove($fiche);
+                $em->flush();
+            }
+           
+           
 
-        return $this->redirectToRoute('fiche_index');
+        return $this->redirectToRoute('fiches');
     }
 
     /**

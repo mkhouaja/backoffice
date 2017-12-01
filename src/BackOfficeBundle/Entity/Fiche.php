@@ -2,6 +2,8 @@
 namespace BackOfficeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * @ORM\Entity
  * @ORM\Table(name="fiche")
@@ -52,7 +54,7 @@ class Fiche
 
      * @ORM\OneToMany(targetEntity="Image", mappedBy="id_fiche")
      */
-    private $images;
+    private $image;
     /**
      * @ORM\OneToMany(targetEntity="Commentaire", mappedBy="id_fiche")
      */
@@ -64,7 +66,7 @@ class Fiche
     ;
     public function __construct()
     {
-        $this->images = new ArrayCollection();
+        //$this->images = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->notifications = new ArrayCollection();
     }
@@ -250,11 +252,11 @@ class Fiche
     /**
      * Add image
      *
-     * @param \BackOfficeBundle\Entity\Image $image
+     * @param UploadedFile $image
      *
      * @return Fiche
      */
-    public function addImage(\BackOfficeBundle\Entity\Image $image)
+    public function addImage(UploadedFile $image)
     {
         $this->images[] = $image;
 
@@ -347,5 +349,28 @@ class Fiche
     public function getNotifications()
     {
         return $this->notifications;
+    }
+      //
+    // Partie qui gère l'envoi d'image depuis le form
+    //
+ 
+    //private $image;
+     
+    private $tempFilename;
+ 
+    public function getImage()
+    {
+        return $this->image;
+    }
+ 
+    public function setImage(UploadedFile $image)
+    {
+        $this->image = $image;
+ 
+        if (null !== $this->url) {
+            $this->tempFilename = $this->url;
+ 
+            $this->url = null;
+        }
     }
 }

@@ -40,94 +40,47 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default margin">
                         <div class="panel-heading">
-                            Fiche Le zink
+                            Fiche {{ fiche.nom }}
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                       		<form role="form">
+                       		 {{ form_start(edit_form) }}
                                 <fieldset>
 								    <legend>Informations générales:</legend>
                                     <div class="form-group">
-                                            <label>Catégorie</label>
-                                            <select class="form-control">
-                                                <option value="1">Restaurant</option>
-                                                <option value="2">Salon de thé</option>
-                                            </select>
-                                        </div>
-									<div class="form-group">
-									    <label>Nom de l'établissement</label>
-	                                    <input class="form-control" value="Le zink">
-									</div>
-									<div class="form-group">
-										<label>Description</label>
-										<textarea class="form-control" rows="3">Il offre une cuisine américaine essentiellement et vous accompagnera pour un petit déjeuner, un brunch, un déjeuner ou un dîner.</textarea>
-									</div>
-								  </fieldset>
-								  <fieldset>
-								    <legend>Adresse:</legend>
-									<div class="form-group">
-									    <label>Numéro</label>
-	                                    <input class="form-control" value="1">
-									</div>
-									<div class="form-group">
-									    <label>Rue</label>
-	                                    <input class="form-control" value="Salah Ben Mahmoud ">
-									</div>
-                                    <div class="form-group">
-									    <label>Code Postal</label>
-	                                    <input class="form-control" value="1004">
-									</div>
-                                    <div class="form-group">
-									    <label>Ville</label>
-	                                    <input class="form-control" value="Menzah 1">
-									</div>
-                                    <div class="form-group">
-									    <label>Pays</label>
-	                                    <input class="form-control" value="Tunisie">
-									</div>
-                                    <div class="form-group">
-									    <label>Longitude</label>
-	                                    <input class="form-control" value="36.837343">
-									</div>
-                                    <div class="form-group">
-									    <label>Latitude</label>
-	                                    <input class="form-control" value="10.177181">
-									</div>
-								  </fieldset>
-                                  <fieldset>
+                                         <label>Catégorie</label>
+                                          <select class="form-control" name="categorie">
+                         
+                                             {% for categorie in categories %}
+                                                {% if categorie.idcat == fiche.idCat.idCat %}
+                                                 <option selected value="{{ categorie.idcat }}">{{ categorie.nom }}</option>
+                                                 {% else %}
+                                                 <option value="{{ categorie.idcat }}">{{ categorie.nom }}</option>
+                                                 {% endif %}
+                                             {% endfor %}
+                                             </select>
+                                    </div>
+                                    {{ form_widget(edit_form) }}
+                                    <fieldset>
                                       <legend>Images:</legend>
-                                      <div class="images-fiche">
+                                       {% for image in images %}
+                                        <div class="images-fiche">
                                           <div class="image-fiche">
                                               <table>
-                                                <td><img src="{{ asset('bundles/backoffice/images/zink1.jpg') }}" alt="zink1" /></td>
-                                                <td><button type="button" class="btn btn-danger btn-sm">Supprimer la photo</button></td> 
-                                              </table>      
+                                                <td><img src="{{ asset('/uploads/images/'~image.nom) }}"  /></td>
+                                                <td><a href="{{ path('supprimer_image', { 'image': image.id_image }) }}"> <button type="button" class="btn btn-danger btn-sm">Supprimer la photo</button></a></td> 
+                                              </table>     
                                           </div>
-                                          <div class="image-fiche">
-                                              <table>
-                                                <td><img src="{{ asset('bundles/backoffice/images/zink2.jpg') }}" alt="zink2" /></td>
-                                                <td><button type="button" class="btn btn-danger btn-sm">Supprimer la photo</button></td> 
-                                              </table>      
-                                          </div>
+                                       {% endfor %}
                                       </div>
-                                      <div class="entry">
-                                          <div class="form-group">
-                                                <label>Ajouter une autre image</label>
-                                                <input type="file" name="fields[]">
-                                                 <span class="input-group-btn">
-                                                      <button class="btn btn-success btn-add" type="button">
-                                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                                      </button>
-                                                 </span>
-                                           </div>
-                                        </div>
-                                  </fieldset>
+                                      </fieldset>
+                                    {{ form_row(edit_form.image) }}            
                                   <div class="form-group">
                                     <button type="submit" class="btn btn-warning btn-sm"">Enregistrer les modifications</button>
-                                    <button type="button" class="btn btn-danger btn-sm">Supprimer la fiche</button></td>
+                                    <a href="{{ path('supprimer_fiche', { 'fiche': fiche.idFiche }) }}"><button type="button" class="btn btn-danger btn-sm">Supprimer la fiche</button></a></td>
                             
                                   </div>
-							</form>
+							{{ form_end(edit_form) }}
                         </div>
                         <!-- /.panel-body -->
                         <div class="panel-heading">
@@ -147,14 +100,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>manel.khouaja@gmail.com</td>
-                                            <td>Trés bon </td>
-                                            <td>18/11/2017</td>
-                                            <td><button type="button" class="btn btn-warning btn-sm">Modifier</button></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm">Supprimer</button></td>
-                                        </tr>
+                                        {% for commentaire in commentaires %}
+                                            <tr>
+                                                <td>{{ commentaire.id_com }}</td>
+                                                <td>{{ commentaire.email }}</td>
+                                                <td>{{ commentaire.texte }}</td>
+                                                <td>{{ commentaire.date_ajout|date('d/m/Y') }}</td>
+    	                                        <td><a href="{{ path('modifier_commentaire', { 'commentaire': commentaire.id_com }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
+                                                <td><a href="{{ path('supprimer_commentaire', { 'commentaire': commentaire.id_com }) }}"><button type="button" class="btn btn-danger btn-sm">Supprimer</button></a></td>
+                                            </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
@@ -177,12 +132,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>manel.khouaja@gmail.com</td>
-                                            <td>4</td>
-                                            <td>18/11/2017</td>
-                                        </tr>
+                                    {% for note in notes %}
+                                            <tr>
+                                                <td>{{ note.id_note }}</td>
+                                                <td>{{ note.email }}</td>
+                                                <td>{{ note.note }}</td>
+                                                <td>{{ note.date_ajout|date('d/m/Y') }}</td>
+    	                                    </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
