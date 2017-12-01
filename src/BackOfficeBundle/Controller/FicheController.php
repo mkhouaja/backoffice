@@ -102,6 +102,10 @@ class FicheController extends Controller
         $editForm->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         $categories = $em->getRepository('BackOfficeBundle:Categorie')->findAll();
+        
+        // Calculer note finale
+        $somme = $this->finalNote($fiche);
+
         //Récupérer les commentaires reliés a la fiche
         $repository = $em->getRepository('BackOfficeBundle:Commentaire');
         $query = $repository->createQueryBuilder('u')
@@ -162,12 +166,13 @@ class FicheController extends Controller
         }
 
         return $this->render('BackOfficeBundle:Fiches:consulter-fiche.html.twig', array(
-            'fiche' => $fiche,
-            'edit_form' => $editForm->createView(),
-            'commentaires' => $query,
-            'notes'      => $query2,
-            'categories'  => $categories,
-            'images'      => $query3,
+            'fiche'         => $fiche,
+            'edit_form'     => $editForm->createView(),
+            'commentaires'  => $query,
+            'notes'         => $query2,
+            'categories'    => $categories,
+            'images'        => $query3,
+            'note'          =>$somme,
         ));
     }
 
@@ -240,5 +245,16 @@ class FicheController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+    public function finalNote(fiche $fiche) {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('BackOfficeBundle:Note');
+        $query = $repository->createQueryBuilder('g')
+            ->select("avg(g.note) as note")
+            ->where ('g.id_fiche = :idFiche')
+            ->setParameters(['idFiche'=> $fiche->getIdFiche()])
+            ->getQuery();
+        $somme = $query->getSingleScalarResult();      
+        return $somme;
     }
 }
