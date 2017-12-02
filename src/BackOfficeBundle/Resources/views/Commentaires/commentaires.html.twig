@@ -62,7 +62,7 @@
                                             <tr>
                                                 <td>{{ commentaire.id_com }}</td>
                                                 <td>{{ commentaire.nom }}</td>
-                                                <td>{{ commentaire.email }}</td>
+                                                <td>{{ commentaire.pseudo }}</td>
                                                 <td>{{ commentaire.texte }}</td>
                                                 <td>{{ commentaire.date_ajout|date('d/m/Y') }}</td>
     	                                        <td><a href="{{ path('modifier_commentaire', { 'commentaire': commentaire.id_com }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>

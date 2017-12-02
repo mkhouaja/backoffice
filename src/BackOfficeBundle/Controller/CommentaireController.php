@@ -5,6 +5,7 @@ namespace BackOfficeBundle\Controller;
 use BackOfficeBundle\Entity\Commentaire;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -24,7 +25,7 @@ class CommentaireController extends Controller
 
         $repository = $em->getRepository('BackOfficeBundle:Commentaire');
         $query = $repository->createQueryBuilder('u')
-        ->select('g.email, f.nom,u.texte,u.id_com,u.date_ajout')
+        ->select('g.pseudo, f.nom,u.texte,u.id_com,u.date_ajout')
                 ->innerjoin('BackOfficeBundle:Utilisateur', 'g' ,'WITH', 'u.id_utilisateur = g.id_utilisateur')
                 ->innerjoin('BackOfficeBundle:Fiche', 'f')
                 ->where ('u.id_fiche = f.id_fiche')
@@ -72,7 +73,7 @@ class CommentaireController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $date = date('Y-m-d');
             $date = new \DateTime($date); 
-            $commentaire>setDateModification($date);
+            $commentaire->setDateModification($date);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('commentaires');
@@ -109,7 +110,8 @@ class CommentaireController extends Controller
       $em = $this->getDoctrine()->getManager();
        $repository = $em->getRepository('BackOfficeBundle:Commentaire');
         $query = $repository->createQueryBuilder('u')
-        ->select('u.texte,u.date_ajout')         
+        ->select('u.texte,u.date_ajout','g.pseudo')      
+                ->innerjoin('BackOfficeBundle:Utilisateur', 'g' ,'WITH', 'u.id_utilisateur = g.id_utilisateur')   
                 ->where ('u.id_fiche = :idFiche')
                 ->setParameters(['idFiche'=> $fiche])
                 ->getQuery()->getResult();
@@ -122,10 +124,40 @@ class CommentaireController extends Controller
             $date = $commentaire['date_ajout']->format('d/m/Y');
             $formatted[] = [
                'date'           => $date,
+               'pseudo'         => $commentaire['pseudo'],
                'commentaire'    => $commentaire['texte']
             ];
         }
 
         return new JsonResponse($formatted);
     }
+    /**
+     * @Route("/api/commentaire/ajout", name="ajout commentaire")
+     * @Method({"POST"})
+     */
+    public function addCommentaire(Request $request)
+    {
+        $entityBody = file_get_contents('php://input');
+        $results = json_decode($entityBody);
+        $date = date('Y-m-d');
+        $date = new \DateTime($date); 
+        $fiche = $this->getDoctrine()->getRepository('BackOfficeBundle:Fiche')->find($results->{'id_fiche'});
+        $user = $this->getDoctrine()->getRepository('BackOfficeBundle:Utilisateur')->find($results->{'id_utilisateur'});
+        $commentaire = new Commentaire();
+        $commentaire->setTexte($results->{'texte'})
+                    ->setIdFiche($fiche)
+                    ->setDateAjout($date)
+                    ->setDateModification($date) 
+                    ->setIdUtilisateur($user);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($commentaire);
+        $em->flush();
+ 
+        $response = new Response(json_encode($entityBody));
+        
+      return $response;                   
+    }
+
 }
+
+

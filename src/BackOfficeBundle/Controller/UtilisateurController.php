@@ -4,8 +4,11 @@ namespace BackOfficeBundle\Controller;
 
 use BackOfficeBundle\Entity\Utilisateur;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * Utilisateur controller.
@@ -59,5 +62,77 @@ class UtilisateurController extends Controller
         }
 
         return $this->redirectToRoute('utilisateurs');
+    }
+    /**
+     * @Route("/api/utilisateur/ajout", name="ajout-utilisateur")
+     * @Method({"POST"})
+     */
+    public function addUtilisateur(Request $request)
+    {
+         $em = $this->getDoctrine()->getManager();
+         $repository = $em->getRepository('BackOfficeBundle:Utilisateur');
+       
+        
+        $entityBody = file_get_contents('php://input');
+        $results = json_decode($entityBody);     
+        $pseudo= $repository->findBy(array('pseudo' => $results->{'pseudo'}));
+        $email = $repository->findBy(array('email' => $results->{'email'}));
+        if(count($email) > 0 && $pseudo > 0) {
+             $response = new Response(json_encode("pseudo + email"));
+             return $response;    
+             die(); 
+        }
+        elseif(count($email) > 0) {
+             $response = new Response(json_encode("email"));
+             return $response;    
+             die();
+        }  
+        elseif (count($pseudo) > 0) {
+             $response = new Response(json_encode("pseudo"));
+             return $response;    
+             die();
+        }  
+        else {
+        $date = date('Y-m-d');
+        $date = new \DateTime($date); 
+        $user = new Utilisateur();
+        $user->setEmail($results->{'email'})
+                ->setMotDePasse(md5($results->{'password'}))
+                ->setDateAjout($date)
+                ->setDateModification($date)
+                ->setIdDevice($results->{'device'})
+                ->setPseudo($results->{'pseudo'});
+        $em->persist($user);
+        $em->flush();
+ 
+        $response = new Response(json_encode($user->getIdUtilisateur()));
+        }
+      return $response;                   
+    }
+    /**
+     * @Route("/api/utilisateur/login", name="login-utilisateur")
+     * @Method({"POST"})
+     */
+    public function login(Request $request)
+    {   
+        $entityBody = file_get_contents('php://input');
+        $results = json_decode($entityBody);
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('BackOfficeBundle:Utilisateur');
+        $query = $repository->createQueryBuilder('u')
+        ->select('u.email,u.mot_de_passe,u.id_utilisateur id')   
+                ->where ('u.email = :email AND u.mot_de_passe = :password')
+                ->setParameters(['email'=> $results->{'email'},'password'=> md5($results->{'password'})])           
+                ->getQuery()->getResult();
+        $user = $query;
+    
+        if(count($user) == 0) {
+            $response = new Response(json_encode("ko"));
+        }
+        else {
+            $response = new Response(json_encode($user[0]['id']));
+        }
+    
+      return $response;                   
     }
 }

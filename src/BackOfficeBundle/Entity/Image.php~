@@ -1,11 +1,13 @@
 <?php
 namespace BackOfficeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
- * @ORM\Table(name="utilisateur")
+ * @ORM\Table(name="image")
  */
-class Utilisateur
+class Image
 {
 
     /**
@@ -13,23 +15,19 @@ class Utilisateur
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id_utilisateur;
+    private $id_image;
      /**
      * @ORM\Column(type="string", length=100)
      */
-    private $email;
+    private $nom;
 	/**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=300)
      */
-    private $mot_de_passe;
-    /**
-     * @ORM\Column(type="string", length=100)
+    private $chemin;
+	/**
+     * @ORM\Column(type="string", length=300)
      */
-    private $pseudo;
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
-    private $id_device;
+    private $taille;
     /**
      * @ORM\Column(type="date")
      */
@@ -38,87 +36,92 @@ class Utilisateur
      * @ORM\Column(type="date")
      */
     private $date_modification;
+    /**
+     * @ORM\ManyToOne(targetEntity="Fiche", inversedBy="images")
+     * @ORM\JoinColumn(name="id_fiche", referencedColumnName="id_fiche")
+     */
+    private $id_fiche;
 
     /**
-     * Get idUtilisateur
+     * Get idImage
      *
      * @return integer
      */
-    public function getIdUtilisateur()
+    public function getIdImage()
     {
-        return $this->id_utilisateur;
+        return $this->id_image;
     }
 
     /**
-     * Set email
+     * Set nom
      *
-     * @param string $email
+     * @param string $nom
      *
-     * @return Utilisateur
+     * @return Image
      */
-    public function setEmail($email)
+    public function setNom($nom)
     {
-        $this->email = $email;
+        $this->nom = $nom;
 
         return $this;
     }
 
     /**
-     * Get email
+     * Get nom
      *
      * @return string
      */
-    public function getEmail()
+    public function getNom()
     {
-        return $this->email;
+        return $this->nom;
     }
 
     /**
-     * Set motDePasse
+     * Set chemin
      *
-     * @param string $motDePasse
+     * @param string $chemin
      *
-     * @return Utilisateur
+     * @return Image
      */
-    public function setMotDePasse($motDePasse)
+    public function setChemin($chemin)
     {
-        $this->mot_de_passe = $motDePasse;
+        $this->chemin = $chemin;
 
         return $this;
     }
 
     /**
-     * Get motDePasse
+     * Get chemin
      *
      * @return string
      */
-    public function getMotDePasse()
+    public function getChemin()
     {
-        return $this->mot_de_passe;
+        return $this->chemin;
     }
 
     /**
-     * Set idDevice
+     * Set taille
      *
-     * @param string $idDevice
+     * @param string $taille
      *
-     * @return Utilisateur
+     * @return Image
      */
-    public function setIdDevice($idDevice)
+    public function setTaille($taille)
     {
-        $this->id_device = $idDevice;
+        $this->taille = $taille;
 
         return $this;
     }
 
     /**
-     * Get idDevice
+     * Get taille
      *
      * @return string
      */
-    public function getIdDevice()
+    public function getTaille()
     {
-        return $this->id_device;
+        return $this->taille;
     }
 
     /**
@@ -126,7 +129,7 @@ class Utilisateur
      *
      * @param \DateTime $dateAjout
      *
-     * @return Utilisateur
+     * @return Image
      */
     public function setDateAjout($dateAjout)
     {
@@ -150,7 +153,7 @@ class Utilisateur
      *
      * @param \DateTime $dateModification
      *
-     * @return Utilisateur
+     * @return Image
      */
     public function setDateModification($dateModification)
     {
@@ -170,26 +173,26 @@ class Utilisateur
     }
 
     /**
-     * Set pseudo
+     * Set idFiche
      *
-     * @param string $pseudo
+     * @param integer $idFiche
      *
-     * @return Utilisateur
+     * @return Image
      */
-    public function setPseudo($pseudo)
+    public function setIdFiche($idFiche)
     {
-        $this->pseudo = $pseudo;
+        $this->id_fiche = $idFiche;
 
         return $this;
     }
 
     /**
-     * Get pseudo
+     * Get idFiche
      *
-     * @return string
+     * @return integer
      */
-    public function getPseudo()
+    public function getIdFiche()
     {
-        return $this->pseudo;
+        return $this->id_fiche;
     }
 }

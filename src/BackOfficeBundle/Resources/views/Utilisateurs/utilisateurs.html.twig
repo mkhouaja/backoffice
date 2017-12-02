@@ -50,6 +50,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Email</th>
+                                            <th>Pseudo</th>
                                             <th>Date d'inscription</th>
                                             <th></th>
                                             <th></th>
@@ -60,6 +61,7 @@
                                         <tr>
                                             <td>{{ utilisateur.idutilisateur }}</td>
                                             <td>{{ utilisateur.email }}</td>
+                                            <td>{{ utilisateur.pseudo }}</td>
                                             <td>{{ utilisateur.dateajout|date('d/m/Y') }}</td>
                                             <td><a href="{{ path('modifier_utilisateur', { 'utilisateur': utilisateur.idutilisateur }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
                                             <td><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#supprimer">Supprimer</button></td>

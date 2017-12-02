@@ -307,7 +307,6 @@ class FicheController extends Controller
             ->setParameters(['idFiche'=> $fiche])
             ->getQuery();
         $somme = $query2->getSingleScalarResult(); 
-
         
        // Récupérer l'adresse
        $repository3 = $em->getRepository('BackOfficeBundle:Adresse');
@@ -331,7 +330,7 @@ class FicheController extends Controller
             $adresse = $adresse[0]['numero'].' '.$adresse[0]['rue'].' '.$adresse[0]['code_postal'].' '.$adresse[0]['ville'].' '.$adresse[0]['pays'];
             $formatted = [];
             if ((int)$somme > 0) 
-               $somme = (int)$somme;
+               $somme = round($somme);
             else 
                 $somme = "-";
            
