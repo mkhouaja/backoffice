@@ -31,7 +31,7 @@ class NotificationController extends Controller
     }
 
     /**
-    * @Route("/notification/ajouter")
+    * @Route("/notifications/ajouter")
     */
     public function newAction(Request $request)
     {

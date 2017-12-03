@@ -37,14 +37,10 @@ class Categorie
         return $this->id_cat;
     }
     
-    /**
-     * @ORM\OneToMany(targetEntity="Fiche", mappedBy="id_cat")
-     */
-    private $fiches;
-
+    
     public function __construct()
     {
-        $this->fiches = new ArrayCollection();
+        //$this->fiches = new ArrayCollection();
     }
 
     /**

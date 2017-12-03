@@ -270,6 +270,7 @@ class Fiche
      */
     public function removeImage(\BackOfficeBundle\Entity\Image $image)
     {
+        var_dump($this->images);
         $this->images->removeElement($image);
     }
 

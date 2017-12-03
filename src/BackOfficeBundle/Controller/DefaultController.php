@@ -31,6 +31,7 @@ class DefaultController extends Controller
             'nb_c'=> count($commentaires),
             'nb_n'=> count($notifications)));
     }
+    
     /**
      * @Route("/profil/{administrateur}" ,name="profil")
     */

@@ -121,6 +121,7 @@ class CategorieController extends Controller
 
         return new JsonResponse($formatted);
     }
+    
     /**
      * @Route("/api/categorie/{categorie}", name="categorie")
      * @Method({"GET"})
@@ -130,6 +131,6 @@ class CategorieController extends Controller
        $em = $this->getDoctrine()->getManager();
        $categories = $em->getRepository('BackOfficeBundle:Categorie')->find($categorie);
 
-        return new JsonResponse($categories->getNom());
+       return new JsonResponse($categories->getNom());
     }
 }

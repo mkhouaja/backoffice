@@ -15,46 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
  */
 class NoteController extends Controller
 {
-    /**
-     * Displays a form to edit an existing note entity.
-     *
-     */
-    public function editAction(Request $request, Note $note)
-    {
-        $deleteForm = $this->createDeleteForm($note);
-        $editForm = $this->createForm('BackOfficeBundle\Form\NoteType', $note);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('note_edit', array('id_note' => $note->getId_note()));
-        }
-
-        return $this->render('note/edit.html.twig', array(
-            'note' => $note,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Deletes a note entity.
-     *
-     */
-    public function deleteAction(Request $request, Note $note)
-    {
-        $form = $this->createDeleteForm($note);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($note);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('note_index');
-    }
+ /******Fonctions utilisées par l'application**********/
     /**
      * @Route("/api/note/ajout", name="ajout_note")
      * @Method({"POST"})

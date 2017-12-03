@@ -99,7 +99,7 @@ class FicheController extends Controller
     */
     public function editAction(Request $request, Fiche $fiche)
     {
-        $img = new Image();
+       
         $editForm = $this->createForm('BackOfficeBundle\Form\FicheType', $fiche);
         $editForm->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
@@ -147,7 +147,8 @@ class FicheController extends Controller
             //Upload des images          
              $images = $fiche->getImages();
              foreach ($images as $image) {
-                 
+                 $img = new Image();
+                 $em2 = $this->getDoctrine()->getManager();
                  $imageName = $image->getClientOriginalName();
                  $image->move(
                      $this->getParameter('images_directory'),
@@ -160,7 +161,8 @@ class FicheController extends Controller
                  $img->setDateModification($date);
                  $img->setIdFiche($fiche);
                 
-                 $em->persist($img);
+                 $em2->persist($img);
+                 $em2->flush();
              }
               $this->getDoctrine()->getManager()->flush();
 
@@ -233,21 +235,7 @@ class FicheController extends Controller
         return $this->redirectToRoute('fiches');
     }
 
-    /**
-     * Creates a form to delete a fiche entity.
-     *
-     * @param Fiche $fiche The fiche entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Fiche $fiche)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('fiche_delete', array('id_fiche' => $fiche->getId_fiche())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
+   
     public function finalNote(fiche $fiche) {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('BackOfficeBundle:Note');

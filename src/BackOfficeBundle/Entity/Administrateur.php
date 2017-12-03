@@ -39,19 +39,10 @@ class Administrateur
      * @ORM\Column(type="date")
      */
     private $date_modification;
-    /**
-     * @ORM\OneToMany(targetEntity="Fiche", mappedBy="id")
-     */
-    private $fiches;
-     /**
-     * @ORM\OneToMany(targetEntity="Notification", mappedBy="id")
-     */
-    private $notifications;
-
+    
     public function __construct()
     {
-        $this->fiches = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
+        
     }
     /**
      * Get id
@@ -205,73 +196,5 @@ class Administrateur
     public function getDateModification()
     {
         return $this->date_modification;
-    }
-
-    /**
-     * Add fich
-     *
-     * @param \BackOfficeBundle\Entity\Fiche $fich
-     *
-     * @return Administrateur
-     */
-    public function addFich(\BackOfficeBundle\Entity\Fiche $fich)
-    {
-        $this->fiches[] = $fich;
-
-        return $this;
-    }
-
-    /**
-     * Remove fich
-     *
-     * @param \BackOfficeBundle\Entity\Fiche $fich
-     */
-    public function removeFich(\BackOfficeBundle\Entity\Fiche $fich)
-    {
-        $this->fiches->removeElement($fich);
-    }
-
-    /**
-     * Get fiches
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFiches()
-    {
-        return $this->fiches;
-    }
-
-    /**
-     * Add notification
-     *
-     * @param \BackOfficeBundle\Entity\Notification $notification
-     *
-     * @return Administrateur
-     */
-    public function addNotification(\BackOfficeBundle\Entity\Notification $notification)
-    {
-        $this->notifications[] = $notification;
-
-        return $this;
-    }
-
-    /**
-     * Remove notification
-     *
-     * @param \BackOfficeBundle\Entity\Notification $notification
-     */
-    public function removeNotification(\BackOfficeBundle\Entity\Notification $notification)
-    {
-        $this->notifications->removeElement($notification);
-    }
-
-    /**
-     * Get notifications
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getNotifications()
-    {
-        return $this->notifications;
     }
 }
