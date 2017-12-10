@@ -7,15 +7,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Session\Session;
-
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+ 
 class DefaultController extends Controller 
 {
     /**
      * @Route("/index", name="index")
      */
-    public function indexAction()
+    public function indexAction(SessionInterface $session)
     {
-        $user = $this->getDoctrine()->getRepository('BackOfficeBundle:Administrateur')->find("1");
+    
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
+       
+        $user = $this->getDoctrine()->getRepository('BackOfficeBundle:Administrateur')->find($session->get('id'));
         $em = $this->getDoctrine()->getManager();
         
         $utilisateurs = $em->getRepository('BackOfficeBundle:Utilisateur')->findAll(); 
@@ -35,12 +41,16 @@ class DefaultController extends Controller
     /**
      * @Route("/profil/{administrateur}" ,name="profil")
     */
-    public function editAction(Request $request, Administrateur $administrateur)
+    public function editAction(Request $request, Administrateur $administrateur,SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $editForm = $this->createForm('BackOfficeBundle\Form\AdministrateurType', $administrateur);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('index',array("msg" => "Modification réussie"));
@@ -50,5 +60,5 @@ class DefaultController extends Controller
             'administrateur' => $administrateur,
             'edit_form' => $editForm->createView()
         ));
-    }   
+    }
 }

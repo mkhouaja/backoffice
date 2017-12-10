@@ -87,7 +87,7 @@ class Administrateur
      */
     public function setMotDePasse($motDePasse)
     {
-        $this->mot_de_passe = $motDePasse;
+        $this->mot_de_passe = md5($motDePasse);
 
         return $this;
     }

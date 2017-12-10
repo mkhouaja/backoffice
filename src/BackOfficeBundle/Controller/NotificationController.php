@@ -6,6 +6,7 @@ use BackOfficeBundle\Entity\Notification;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Notification controller.
@@ -16,8 +17,11 @@ class NotificationController extends Controller
     /**
      * @Route("/notifications", name="notifications")
     */
-    public function indexAction()
+    public function indexAction(SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('BackOfficeBundle:Notification');
         $query = $repository->createQueryBuilder('u')
@@ -33,12 +37,15 @@ class NotificationController extends Controller
     /**
     * @Route("/notifications/ajouter")
     */
-    public function newAction(Request $request)
+    public function newAction(Request $request,SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $notification = new Notification();
         $form = $this->createForm('BackOfficeBundle\Form\NotificationType', $notification);
         $form->handleRequest($request);
-        $user = $this->getDoctrine()->getRepository('BackOfficeBundle:Administrateur')->find("1");
+        $user = $this->getDoctrine()->getRepository('BackOfficeBundle:Administrateur')->find($session->get('id'));
         $fiches = $this->getDoctrine()->getRepository('BackOfficeBundle:Fiche')->findAll();
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -55,7 +62,10 @@ class NotificationController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($notification);
             $em->flush();
-
+            $envoi = $request->request->get('envoyer');
+            if($envoi == "envoyer") {
+                 $this->SendNotification($notification);
+            }
             return $this->redirectToRoute('notifications');
         }
 
@@ -72,8 +82,11 @@ class NotificationController extends Controller
     /**
     * @Route("/notification/modifier/{notification}", name="modifier_notification")
     */
-    public function editAction(Request $request, Notification $notification)
+    public function editAction(Request $request, Notification $notification,SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $fiches = $this->getDoctrine()->getRepository('BackOfficeBundle:Fiche')->findAll();
         $editForm = $this->createForm('BackOfficeBundle\Form\NotificationType', $notification);
         $editForm->handleRequest($request);
@@ -123,12 +136,54 @@ class NotificationController extends Controller
     /**
     * @Route("/notification/envoyer/{notification}", name="envoyer_notification")
     */
-    private function createDeleteForm(Notification $notification)
+    public function SendNotification(Notification $notification)
+    
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('notification_delete', array('id_notif' => $notification->getId_notif())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+    // écupérer les devices id 
+    $repository = $this->getDoctrine()->getRepository('BackOfficeBundle:Utilisateur');
+    $query = $repository->createQueryBuilder('u')
+    ->select('u.id_device')
+    ->getQuery()->getResult();
+ 
+    for($i = 0;$i<count($query);$i++)
+    {
+        $data[] = $query[0]["id_device"];
     }
+ 
+    $url = 'https://fcm.googleapis.com/fcm/send';
+
+    $fields = array (
+            'registration_ids' => $data,
+            'data' => array (
+                    "title"   => $notification->getTitre(),
+                    "message" => $notification->getTexte()
+            )
+    );
+    $fields = json_encode ( $fields );
+
+    $headers = array (
+            'Authorization: key=' . "AAAAhmt3EeU:APA91bEubKrJEtDr48HbDe2vwYgEM2lQK0sB1V16rqGf2BhnPH5sdK1dccHjFaEpTxs-efcxCFdxuHt3-sa-eU0mc6_nZ2msY1hF8FksLf0Blup_AUveO5oyr9fWyd6x4Xoj5AzNMNe3",
+            'Content-Type: application/json'
+    );
+
+    $ch = curl_init();
+    curl_setopt ( $ch, CURLOPT_URL, $url );
+    curl_setopt ( $ch, CURLOPT_POST, true );
+    curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
+    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+    curl_setopt ( $ch, CURLOPT_POSTFIELDS, $fields );
+
+    $result = curl_exec ( $ch );
+    //Enregistrement de la date d'envoi dans la base
+    $repository = $this->getDoctrine()->getRepository('BackOfficeBundle:Notification');
+    $date = date('Y-m-d');
+    $date = new \DateTime($date);
+    $notification->setDateEnvoi($date);
+    $this->getDoctrine()->getManager()->flush();
+
+    curl_close ( $ch );
+    
+    return $this->redirectToRoute("notifications");
+    }
+
 }

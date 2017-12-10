@@ -1,51 +1,22 @@
-<head>
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
-
-</head>
-<div id="wrapper">
-{% include 'BackOfficeBundle:Pages:bonjour.html.twig' %} 
-            {% include 'BackOfficeBundle:Pages:navigation.html.twig' %} 
-
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="side-menu">
-                        <li>
-                            <a href="/index"><i class="fa fa-dashboard fa-fw"></i>Tableau de bord</a>
-                        </li>
-                        <li>
-                            <a href="/utilisateurs"><i class="fa fa-table fa-fw"></i> Gérer les utilisateurs</a>
-                        </li>
-                        <li>
-                            <a href="/categories"><i class="fa fa-table fa-fw"></i> Gérer les catégories</a>
-                        </li>
-                        <li>
-                            <a href="/fiches"><i class="fa fa-table fa-fw"></i>Gérer les fiches</a>
-                        </li>
-                        <li>
-                            <a href="/commentaires"><i class="fa fa-table fa-fw"></i> Gérer les commentaires</a>
-                        </li>
-                        <li  class="selected">
-                            <a href="/notifications"><i class="fa fa-table fa-fw"></i> Gérer les notifications push</a>
-                        </li>                                       
-                    </ul>
-                </div>
-                <!-- /.sidebar-collapse -->
-            </div>
-            <!-- /.navbar-static-side -->
+{% extends "BackOfficeBundle:Pages:base.html.twig" %}
+{% block content %}
+    <div id="wrapper">
+        <nav>
+            {% include 'BackOfficeBundle:Pages:bonjour.html.twig' %} 
+            {% include 'BackOfficeBundle:Pages:navigation.html.twig' %}
+            {% include 'BackOfficeBundle:Pages:navbar.html.twig' %} 
         </nav>
-
         <div id="page-wrapper">
         <div class="row">
             <a href="/notifications/ajouter">
-                    <button type="button" class="btn btn-info btn-block right">Ajouter une notification</button>
+                <button type="button" class="btn btn-info btn-block right">Ajouter une notification</button>
             </a>
             </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default margin">
                         <div class="panel-heading">
-                            Liste des commentaires
+                            Liste des notifications
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -73,26 +44,27 @@
                                             <td>{{ notification.texte }}</td>
                                             <td>{{ notification.date_ajout|date('d/m/Y') }}</td>
                                             <td>{% if notification.date_envoi %}{{ notification.date_envoi|date('d/m/Y') }}{% endif %}</td>
-	                                        <td><a href="{{ path('envoyer_notification', { 'notification': notification.id_notif }) }}"><button type="button"  class="btn btn-primary btn-sm">Envoyer</button></a></td>
-                                            <td><a href="{{ path('modifier_notification', { 'notification':  notification.id_notif }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
+	                                        <td>{% if notification.date_envoi == false %}<a href="{{ path('envoyer_notification', { 'notification': notification.id_notif }) }}"><button type="button"  class="btn btn-primary btn-sm">Envoyer</button></a>{% endif %}</td>
+                                            <td>{% if notification.date_envoi == false %}<a href="{{ path('modifier_notification', { 'notification':  notification.id_notif }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a>{% endif %}</td>
                                             <td><a href="{{ path('supprimer_notification', { 'notification':  notification.id_notif }) }}"><button type="button" class="btn btn-danger btn-sm">Supprimer</button></a></td>
                                         </tr>
                                         {% endfor %}
                                    </tbody>
                                 </table>
                             </div>
-                            <!-- /.table-responsive -->
                         </div>
-                        <!-- /.panel-body -->
                     </div>
-                    <!-- /.panel -->
                 </div>
                 {% include 'BackOfficeBundle:Pages:confirmation-envoi.html.twig' %} 
-                <!-- /.col-lg-6 -->
+            </div>
         </div>
-        <!-- /#page-wrapper -->
-
     </div>
-  <script src="{{ asset('js/jquery.js') }}"></script>
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-</body>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $(".nav li").removeClass("selected") 
+        $('#notifications').addClass('selected');
+    });
+    </script>
+{% endblock %}

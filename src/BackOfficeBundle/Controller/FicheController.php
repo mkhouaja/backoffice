@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 /**
@@ -20,8 +21,11 @@ class FicheController extends Controller
     /**
      * @Route("/fiches", name="fiches")
     */
-    public function indexAction()
+    public function indexAction(SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('BackOfficeBundle:Fiche');
@@ -38,14 +42,16 @@ class FicheController extends Controller
     /**
      * @Route("/fiche/ajout")
     */
-    public function newAction(Request $request)
+    public function newAction(Request $request,SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $fiche = new Fiche();
-        $img = new Image();
         $form = $this->createForm('BackOfficeBundle\Form\FicheType', $fiche);
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
-        $user = $this->getDoctrine()->getRepository('BackOfficeBundle:Administrateur')->find("1");
+        $user = $this->getDoctrine()->getRepository('BackOfficeBundle:Administrateur')->find($session->get('id'));
         $categories = $em->getRepository('BackOfficeBundle:Categorie')->findAll();
         
         if ($form->isSubmitted() && $form->isValid()) {
@@ -65,7 +71,7 @@ class FicheController extends Controller
             //Upload des images          
              $images = $fiche->getImages();
              foreach ($images as $image) {
-                 
+                 $img = new Image();
                  $imageName = $image->getClientOriginalName();
                  $image->move(
                      $this->getParameter('images_directory'),
@@ -97,9 +103,11 @@ class FicheController extends Controller
     /**
     * @Route("/fiche/modifier/{fiche}", name="modifier_fiche")
     */
-    public function editAction(Request $request, Fiche $fiche)
+    public function editAction(Request $request, Fiche $fiche,SessionInterface $session)
     {
-       
+       if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $editForm = $this->createForm('BackOfficeBundle\Form\FicheType', $fiche);
         $editForm->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
@@ -183,8 +191,11 @@ class FicheController extends Controller
      /**
     * @Route("/fiche/supprimer/{fiche}", name="supprimer_fiche")
     */
-    public function deleteAction(Request $request, Fiche $fiche)
+    public function deleteAction(Request $request, Fiche $fiche,SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         if ($fiche) {
             $em = $this->getDoctrine()->getManager();
             
@@ -258,21 +269,28 @@ class FicheController extends Controller
        $em = $this->getDoctrine()->getManager();
        $repository = $em->getRepository('BackOfficeBundle:Fiche');
         $query = $repository->createQueryBuilder('u')
-        ->select('g.nom nom_image,u.id_fiche,u.nom,u.decription') 
-                ->innerjoin('BackOfficeBundle:Image', 'g' ,'WITH', 'u.id_fiche = g.id_fiche')            
+        ->select('u.id_fiche,u.nom,u.decription')         
                 ->where ('u.id_cat = :idCat')
                 ->setParameters(['idCat'=> $categorie])
                 ->getQuery()->getResult();
         $fiches = $query;
-        /* @var $fiches Fiche[] */
-
+        $repository2 = $em->getRepository('BackOfficeBundle:Image');
         $formatted = [];
         foreach ($fiches as $fiche) {
+            //Récupérer une seule image
+            $query2 = $repository2->createQueryBuilder('g')
+            ->select('g.nom')         
+            ->where ('g.id_fiche = :idFiche')
+            ->setParameters(['idFiche'=> $fiche['id_fiche']])
+            ->groupBy('g.nom')
+            ->setMaxResults(1)
+            ->getQuery()->getResult();
+
             $formatted[] = [
                'id'             => $fiche['id_fiche'],
                'nom'            => $fiche['nom'],
                'description'    => $fiche['decription'],
-               'url_image'      => 'http://127.0.0.1:8000/uploads/images/'.$fiche['nom_image']
+               'url_image'      => 'http://pfe.manel-khouaja.com/uploads/images/'.$query2[0]['nom']
             ];
         }
 
@@ -299,36 +317,50 @@ class FicheController extends Controller
        // Récupérer l'adresse
        $repository3 = $em->getRepository('BackOfficeBundle:Adresse');
        $query3 = $repository3->createQueryBuilder('u')
-        ->select('u.numero,u.rue,u.code_postal,u.ville,u.pays') 
+        ->select('u.numero,u.rue,u.code_postal,u.ville,u.pays,u.id_adresse') 
                 ->innerjoin('BackOfficeBundle:Fiche', 'g' ,'WITH', 'g.adresse = u.id_adresse')   
                 ->where ('g.id_fiche = :idFiche')
                 ->setParameters(['idFiche'=> $fiche])           
                 ->getQuery()->getResult();
         $adresse = $query3;
-  
+        //Récupérer Images
+        $repository4 = $em->getRepository('BackOfficeBundle:Image');
+        $query4 = $repository4->createQueryBuilder('g')
+        ->select('g.nom nom_image') 
+                ->where ('g.id_fiche = :idFiche')
+                ->setParameters(['idFiche'=> $fiche])           
+                ->getQuery()->getResult();
+        $images = $query4;
+        $formattedImages = [];
+        foreach ($images as $image) {
+            $formattedImages[] = [
+               'image'      => 'http://pfe.manel-khouaja.com/uploads/images/'.$image['nom_image']
+            ];
+        }
        // Récupérer Fiche    
         $query = $repository->createQueryBuilder('u')
-        ->select('g.nom nom_image,u.id_fiche,u.nom,u.decription') 
-                ->innerjoin('BackOfficeBundle:Image', 'g' ,'WITH', 'u.id_fiche = g.id_fiche')            
+        ->select('u.id_fiche,u.nom,u.decription') 
                 ->where ('u.id_fiche = :idFiche')
                 ->setParameters(['idFiche'=> $fiche])
                 ->getQuery()->getResult();
         $fiche = $query;
         /* @var $fiches Fiche[] */
+            $id_adresse = $adresse[0]['id_adresse'];
             $adresse = $adresse[0]['numero'].' '.$adresse[0]['rue'].' '.$adresse[0]['code_postal'].' '.$adresse[0]['ville'].' '.$adresse[0]['pays'];
             $formatted = [];
             if ((int)$somme > 0) 
                $somme = round($somme);
             else 
                 $somme = "-";
-           
+          
             $formatted[] = [
                'id'             => $fiche[0]['id_fiche'],
                'nom'            => $fiche[0]['nom'],
                'description'    => $fiche[0]['decription'],
-               'url_image'      => 'http://127.0.0.1:8000/uploads/images/'.$fiche[0]['nom_image'],
+               'images'         => $formattedImages,
                'note_finale'    => $somme,
-               'adresse'        => $adresse
+               'adresse'        => $adresse,
+               'id_adresse'     => $id_adresse
             ];
 
 

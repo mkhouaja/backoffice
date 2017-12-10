@@ -4,14 +4,11 @@
             <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
-            <li><a href="{{ path('profil', { 'administrateur': 1 }) }}"><i class="fa fa-user fa-fw"></i>Mon profil</a>
+            <li><a href="{{ path('profil', { 'administrateur':  app.session.get('id') }) }}"><i class="fa fa-user fa-fw"></i>Mon profil</a>
             </li>
             <li class="divider"></li>
-            <li><a href="/"><i class="fa fa-sign-out fa-fw"></i>Se déconnecter</a>
+            <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i>Se déconnecter</a>
             </li>
         </ul>
-        <!-- /.dropdown-user -->
     </li>
-    <!-- /.dropdown -->
 </ul>
-<!-- /.navbar-top-links -->

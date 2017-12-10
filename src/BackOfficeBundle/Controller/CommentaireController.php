@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Commentaire controller.
@@ -19,8 +20,11 @@ class CommentaireController extends Controller
     /**
      * @Route("/commentaires", name="commentaires")
      */
-    public function indexAction()
+    public function indexAction(SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('BackOfficeBundle:Commentaire');
@@ -40,8 +44,11 @@ class CommentaireController extends Controller
      /**
     * @Route("/commentaire/add")
     */
-    public function newAction(Request $request)
+    public function newAction(Request $request,SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $commentaire = new Commentaire();
         $form = $this->createForm('BackOfficeBundle\Form\CommentaireType', $commentaire);
         $form->handleRequest($request);
@@ -64,9 +71,11 @@ class CommentaireController extends Controller
     /**
     * @Route("/commentaire/modifier/{commentaire}", name="modifier_commentaire")
     */
-    public function editAction(Request $request, Commentaire $commentaire)
+    public function editAction(Request $request, Commentaire $commentaire,SessionInterface $session)
     {
-       
+       if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $editForm = $this->createForm('BackOfficeBundle\Form\CommentaireType', $commentaire);
         $editForm->handleRequest($request);
 
@@ -110,13 +119,12 @@ class CommentaireController extends Controller
       $em = $this->getDoctrine()->getManager();
        $repository = $em->getRepository('BackOfficeBundle:Commentaire');
         $query = $repository->createQueryBuilder('u')
-        ->select('u.texte,u.date_ajout','g.pseudo')      
-                ->innerjoin('BackOfficeBundle:Utilisateur', 'g' ,'WITH', 'u.id_utilisateur = g.id_utilisateur')   
-                ->where ('u.id_fiche = :idFiche')
-                ->setParameters(['idFiche'=> $fiche])
-                ->getQuery()->getResult();
+            ->select('u.texte,u.date_ajout','g.pseudo')      
+            ->innerjoin('BackOfficeBundle:Utilisateur', 'g' ,'WITH', 'u.id_utilisateur = g.id_utilisateur')   
+            ->where ('u.id_fiche = :idFiche')
+            ->setParameters(['idFiche'=> $fiche])
+            ->getQuery()->getResult();
         $commentaires = $query;
-        /* @var $fiches Fiche[] */
 
         $formatted = [];
         foreach ($commentaires as $commentaire) {

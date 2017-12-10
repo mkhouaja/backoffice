@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Utilisateur controller.
@@ -19,8 +20,11 @@ class UtilisateurController extends Controller
     /**
      * @Route("/utilisateurs", name="utilisateurs")
     */
-    public function indexAction()
+    public function indexAction(SessionInterface $session)
     {
+        if($session->get('id')==''){
+             return $this->redirectToRoute('admin');
+        }
         $em = $this->getDoctrine()->getManager();
 
         $utilisateurs = $em->getRepository('BackOfficeBundle:Utilisateur')->findAll();
