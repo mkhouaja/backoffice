@@ -144,12 +144,12 @@ class NotificationController extends Controller
     $query = $repository->createQueryBuilder('u')
     ->select('u.id_device')
     ->getQuery()->getResult();
- 
+    $data = array();
     for($i = 0;$i<count($query);$i++)
     {
-        $data[] = $query[0]["id_device"];
+        $data[] = $query[$i]["id_device"];
     }
- 
+    
     $url = 'https://fcm.googleapis.com/fcm/send';
 
     $fields = array (
@@ -183,7 +183,7 @@ class NotificationController extends Controller
 
     curl_close ( $ch );
     
-    return $this->redirectToRoute("notifications");
+     return $this->redirectToRoute("notifications");
     }
 
 }
