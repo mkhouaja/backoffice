@@ -1,0 +1,62 @@
+{% extends "BackOfficeBundle:Pages:base.html.twig" %}
+{% block content %}
+    <div id="wrapper">
+        <nav>
+            {% include 'BackOfficeBundle:Pages:bonjour.html.twig' %} 
+            {% include 'BackOfficeBundle:Pages:navigation.html.twig' %}
+            {% include 'BackOfficeBundle:Pages:navbar.html.twig' %} 
+        </nav>
+        <div id="page-wrapper">
+            <div class="row">
+            <a href="/fiche/ajout">
+                <button type="button" class="btn btn-info btn-block right">Ajouter une fiche</button>
+            </a>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default margin">
+                        <div class="panel-heading">
+                            Liste des fiches
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nom</th>
+                                            <th>Description</th>
+                                            <th>Ajoutée par</th>
+                                            <th>Date d'ajout</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for fiche in fiches %}
+                                        <tr>
+                                            <td>{{ fiche.id_fiche }}</td>
+                                            <td>{{ fiche.nom }}</td>
+                                            <td>{{ fiche.decription }}</td>
+                                            <td>{{ fiche.prenom }}</td>                            
+                                            <td>{{ fiche.date_ajout|date('d/m/Y') }}</td>
+                                            <td><a href="{{ path('modifier_fiche', { 'fiche': fiche.id_fiche }) }}"><button type="button" class="btn btn-primary btn-sm">Consulter</button></a></td>
+                                        </tr>
+                                       {% endfor %}  
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $(".nav li").removeClass("selected") 
+        $('#fiches').addClass('selected');
+    });
+    </script>
+{% endblock %}

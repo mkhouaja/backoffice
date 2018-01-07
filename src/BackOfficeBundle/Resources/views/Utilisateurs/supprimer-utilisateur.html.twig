@@ -1,3 +1,4 @@
+
 <div class="modal fade" id="supprimer" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -13,7 +14,7 @@
         </div>
 		<div class="modal-footer">
         	<button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
-        	<button type="button" class="btn btn-danger">Oui</button>
+        	<a href="{{ path('supprimer_utilisateur', { 'utilisateur': id }) }}"><button type="button" class="btn btn-danger">Oui</button></a>
       	</div>
       </div>
     </div>

@@ -1,0 +1,126 @@
+{% extends "BackOfficeBundle:Pages:base.html.twig" %}
+{% block content %}
+    <div id="wrapper">
+        <nav>
+            {% include 'BackOfficeBundle:Pages:bonjour.html.twig' %} 
+            {% include 'BackOfficeBundle:Pages:navigation.html.twig' %}
+            {% include 'BackOfficeBundle:Pages:navbar.html.twig' %} 
+        </nav>
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default margin">
+                        <div class="panel-heading">
+                            Fiche {{ fiche.nom }}
+                        </div>
+                        <div class="panel-body">
+                       		 {{ form_start(edit_form) }}
+                                <fieldset>
+								    <legend>Informations générales:</legend>
+                                    <div class="form-group">
+                                         <label>Catégorie</label>
+                                          <select class="form-control" name="categorie">
+                                             {% for categorie in categories %}
+                                                {% if categorie.idcat == fiche.idCat.idCat %}
+                                                 <option selected value="{{ categorie.idcat }}">{{ categorie.nom }}</option>
+                                                 {% else %}
+                                                 <option value="{{ categorie.idcat }}">{{ categorie.nom }}</option>
+                                                 {% endif %}
+                                             {% endfor %}
+                                             </select>
+                                    </div>
+                                    {{ form_widget(edit_form) }}
+                                    <fieldset>
+                                      <legend>Images:</legend>
+                                       {% for image in images %}
+                                        <div class="images-fiche">
+                                          <div class="image-fiche">
+                                              <table>
+                                                <td><img src="{{ asset('/uploads/images/'~image.nom) }}"  /></td>
+                                                <td><a href="{{ path('supprimer_image', { 'image': image.id_image }) }}"> <button type="button" class="btn btn-danger btn-sm">Supprimer la photo</button></a></td> 
+                                              </table>     
+                                          </div>
+                                       {% endfor %}
+                                      </div>
+                                      </fieldset>
+                                    {{ form_row(edit_form.image) }}            
+                                  <div class="form-group">
+                                    <button type="submit" class="btn btn-warning btn-sm"">Enregistrer les modifications</button>
+                                    <a href="{{ path('supprimer_fiche', { 'fiche': fiche.idFiche }) }}"><button type="button" class="btn btn-danger btn-sm">Supprimer la fiche</button></a></td>
+                            
+                                  </div>
+							{{ form_end(edit_form) }}
+                        </div>
+                        <div class="panel-heading">
+                            <h4>Les commentaires concernant cet établissement</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Utilisateur</th>
+                                            <th>Commentaire</th>
+                                            <th>Date d'ajout</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for commentaire in commentaires %}
+                                            <tr>
+                                                <td>{{ commentaire.id_com }}</td>
+                                                <td>{{ commentaire.email }}</td>
+                                                <td>{{ commentaire.texte }}</td>
+                                                <td>{{ commentaire.date_ajout|date('d/m/Y') }}</td>
+    	                                        <td><a href="{{ path('modifier_commentaire', { 'commentaire': commentaire.id_com }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
+                                                <td><a href="{{ path('supprimer_commentaire', { 'commentaire': commentaire.id_com }) }}"><button type="button" class="btn btn-danger btn-sm">Supprimer</button></a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                         <div class="panel-heading">
+                            <h4>Les notes concernant cet établissement</h4>
+                        </div>
+                        <div class="panel-body">
+                            <h3>{% if note != 0 %} Note totale : {{note|number_format}}{% endif %}</h3>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Utilisateur</th>
+                                            <th>Note</th>
+                                            <th>Date d'ajout</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for note in notes %}
+                                            <tr>
+                                                <td>{{ note.id_note }}</td>
+                                                <td>{{ note.email }}</td>
+                                                <td>{{ note.note }}</td>
+                                                <td>{{ note.date_ajout|date('d/m/Y') }}</td>
+    	                                    </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $(".nav li").removeClass("selected") 
+        $('#fiches').addClass('selected');
+    });
+    </script>
+{% endblock %}

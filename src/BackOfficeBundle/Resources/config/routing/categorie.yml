@@ -1,0 +1,24 @@
+categorie_index:
+    path:     /
+    defaults: { _controller: "BackOfficeBundle:Categorie:index" }
+    methods:  GET
+
+categorie_show:
+    path:     /{id_cat}/show
+    defaults: { _controller: "BackOfficeBundle:Categorie:show" }
+    methods:  GET
+
+categorie_new:
+    path:     /new
+    defaults: { _controller: "BackOfficeBundle:Categorie:new" }
+    methods:  [GET, POST]
+
+categorie_edit:
+    path:     /{id_cat}/edit
+    defaults: { _controller: "BackOfficeBundle:Categorie:edit" }
+    methods:  [GET, POST]
+
+categorie_delete:
+    path:     /{id_cat}/delete
+    defaults: { _controller: "BackOfficeBundle:Categorie:delete" }
+    methods:  DELETE

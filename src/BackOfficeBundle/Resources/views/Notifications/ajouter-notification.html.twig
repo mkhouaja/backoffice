@@ -1,0 +1,47 @@
+{% extends "BackOfficeBundle:Pages:base.html.twig" %}
+{% block content %}
+    <div id="wrapper">
+        <nav>
+            {% include 'BackOfficeBundle:Pages:bonjour.html.twig' %} 
+            {% include 'BackOfficeBundle:Pages:navigation.html.twig' %}
+            {% include 'BackOfficeBundle:Pages:navbar.html.twig' %} 
+        </nav>          
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default margin">
+                        <div class="panel-heading">
+                            Ajouter une nouvelle notification
+                        </div>
+                        <div class="panel-body">
+                       		{{ form_start(form) }}
+                                <fieldset>
+								    <legend>Ajouter une notification:</legend>
+                                    <div class="form-group">
+                                         <label>Fiche</label>
+                                            <select class="form-control" name="fiche">
+                                             {% for fiche in fiches %}
+                                                 <option value="{{ fiche.idfiche }}">{{ fiche.nom }}</option>
+                                             {% endfor %}
+                                             </select>
+                                       </div>
+                                     {{ form_widget(form) }}
+                                        <button type="submit" name="envoyer" class="btn btn-default btn-info" value="enregistrer">Enregistrer</button>
+                                        <button type="submit" name="envoyer" class="btn btn-default btn-info" value="envoyer">Enregistrer et envoyer</button>
+                                </fieldset>
+							 {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>       
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $(".nav li").removeClass("selected") 
+        $('#notifications').addClass('selected');
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,24 @@
+image_index:
+    path:     /
+    defaults: { _controller: "BackOfficeBundle:Image:index" }
+    methods:  GET
+
+image_show:
+    path:     /{id_image}/show
+    defaults: { _controller: "BackOfficeBundle:Image:show" }
+    methods:  GET
+
+image_new:
+    path:     /new
+    defaults: { _controller: "BackOfficeBundle:Image:new" }
+    methods:  [GET, POST]
+
+image_edit:
+    path:     /{id_image}/edit
+    defaults: { _controller: "BackOfficeBundle:Image:edit" }
+    methods:  [GET, POST]
+
+image_delete:
+    path:     /{id_image}/delete
+    defaults: { _controller: "BackOfficeBundle:Image:delete" }
+    methods:  DELETE

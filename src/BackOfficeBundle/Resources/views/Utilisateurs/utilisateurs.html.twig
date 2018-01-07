@@ -1,0 +1,58 @@
+{% extends "BackOfficeBundle:Pages:base.html.twig" %}
+{% block content %}
+    <div id="wrapper">
+        <nav>
+            {% include 'BackOfficeBundle:Pages:bonjour.html.twig' %} 
+            {% include 'BackOfficeBundle:Pages:navigation.html.twig' %}
+            {% include 'BackOfficeBundle:Pages:navbar.html.twig' %} 
+        </nav>
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default margin">
+                        <div class="panel-heading">
+                            Liste des utilisateurs
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Email</th>
+                                            <th>Pseudo</th>
+                                            <th>Date d'inscription</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for utilisateur in utilisateurs %}
+                                        <tr>
+                                            <td>{{ utilisateur.idutilisateur }}</td>
+                                            <td>{{ utilisateur.email }}</td>
+                                            <td>{{ utilisateur.pseudo }}</td>
+                                            <td>{{ utilisateur.dateajout|date('d/m/Y') }}</td>
+                                            <td><a href="{{ path('modifier_utilisateur', { 'utilisateur': utilisateur.idutilisateur }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a></td>
+                                            <td><button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#supprimer">Supprimer</button></td>
+                                        </tr>
+                                        {{ include ('BackOfficeBundle:Utilisateurs:supprimer-utilisateur.html.twig' ,  { 'id': utilisateur.idutilisateur }) }}
+                                     {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $(".nav li").removeClass("selected") 
+        $('#utilisateurs').addClass('selected');
+    });
+    </script>
+{% endblock %}

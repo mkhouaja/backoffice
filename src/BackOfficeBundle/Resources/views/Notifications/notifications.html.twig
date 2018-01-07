@@ -1,0 +1,70 @@
+{% extends "BackOfficeBundle:Pages:base.html.twig" %}
+{% block content %}
+    <div id="wrapper">
+        <nav>
+            {% include 'BackOfficeBundle:Pages:bonjour.html.twig' %} 
+            {% include 'BackOfficeBundle:Pages:navigation.html.twig' %}
+            {% include 'BackOfficeBundle:Pages:navbar.html.twig' %} 
+        </nav>
+        <div id="page-wrapper">
+        <div class="row">
+            <a href="/notifications/ajouter">
+                <button type="button" class="btn btn-info btn-block right">Ajouter une notification</button>
+            </a>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default margin">
+                        <div class="panel-heading">
+                            Liste des notifications
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Fiche</th>
+                                            <th>Titre</th>
+                                            <th>Texte</th>
+                                            <th>Date d'ajout</th>
+                                            <th>Date d'envoi</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for notification in notifications %}
+                                        <tr>
+                                            <td>{{ notification.id_notif }}</td>
+                                            <td>{{ notification.nom }}</td>
+                                            <td>{{ notification.titre }}</td>
+                                            <td>{{ notification.texte }}</td>
+                                            <td>{{ notification.date_ajout|date('d/m/Y') }}</td>
+                                            <td>{% if notification.date_envoi %}{{ notification.date_envoi|date('d/m/Y') }}{% endif %}</td>
+	                                        <td>{% if notification.date_envoi == false %}<a href="{{ path('envoyer_notification', { 'notification': notification.id_notif }) }}"><button type="button"  class="btn btn-primary btn-sm">Envoyer</button></a>{% endif %}</td>
+                                            <td>{% if notification.date_envoi == false %}<a href="{{ path('modifier_notification', { 'notification':  notification.id_notif }) }}"><button type="button" class="btn btn-warning btn-sm">Modifier</button></a>{% endif %}</td>
+                                            <td><a href="{{ path('supprimer_notification', { 'notification':  notification.id_notif }) }}"><button type="button" class="btn btn-danger btn-sm">Supprimer</button></a></td>
+                                        </tr>
+                                        {% endfor %}
+                                   </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% include 'BackOfficeBundle:Pages:confirmation-envoi.html.twig' %} 
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $(".nav li").removeClass("selected") 
+        $('#notifications').addClass('selected');
+    });
+    </script>
+{% endblock %}
